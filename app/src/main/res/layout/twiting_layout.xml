@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="200dp"
+    android:id="@+id/tweetingPanel"
+    android:layout_gravity="center"
+    android:layout_height="match_parent">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/loginTwitButton"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:padding="15dp"
+        android:background="?android:selectableItemBackground"
+        android:drawableLeft="@drawable/twiit"
+        android:text="@string/loginTwitText"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/findByHash"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:padding="15dp"
+        android:background="?android:selectableItemBackground"
+        android:drawableLeft="@drawable/hashtag"
+        android:text="@string/findByHashText"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/twitMyLocation"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:padding="15dp"
+        android:enabled="false"
+        android:background="?android:selectableItemBackground"
+        android:drawableLeft="@drawable/twitter"
+        android:text="@string/TwitMyLocation"/>
+
+
+</LinearLayout>

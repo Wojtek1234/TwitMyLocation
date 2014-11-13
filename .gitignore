@@ -5,3 +5,4 @@
 .DS_Store
 /build
 .idea
+app/src/main/java/pl/wmaciejewski/twitmylocation/twitter/Constants.java

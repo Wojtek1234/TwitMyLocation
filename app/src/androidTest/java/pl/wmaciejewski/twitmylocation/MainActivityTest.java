@@ -1,7 +1,8 @@
 package pl.wmaciejewski.twitmylocation;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.test.ActivityUnitTestCase;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +17,9 @@ import pl.wmaciejewski.twitmylocation.twitter.RequestTokenActivity;
 public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
 
     private MainActivity activity;
-
+    private Configuration originalConfig; // Treat as read-only - test against for config changes
+    private Configuration changeableConfig;
+    private Resources instrumentResources;
     public MainActivityTest(Class<MainActivity> activityClass) {
         super(activityClass);
     }
@@ -28,22 +31,23 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
                 MainActivity.class);
         startActivity(intent, null, null);
         activity = getActivity();
+        instrumentResources=getInstrumentation().getTargetContext().getResources();
     }
 
 
     public void testUI(){
-        Fragment mapFragment=activity.findViewById(R.id.mapFragment);
+        View mapFragment=activity.findViewById(R.id.mapFragment);
         assertNotNull(mapFragment);
 
-        LinearLayout tweeterLayout=activity.findViewById(R.id.tweetingPanel);
+        LinearLayout tweeterLayout= (LinearLayout) activity.findViewById(R.id.tweetingPanel);
         assertTrue(tweeterLayout.getVisibility()== View.GONE);
 
-        LinearLayout mapLayout=activity.findViewById(R.id.mapPanel);
-        assertTrue(mapLayout.getVisibility()== View.GONE);
+        LinearLayout mapLayout= (LinearLayout) activity.findViewById(R.id.mapPanel);
+        assertTrue(mapFragment.getVisibility()== View.GONE);
     }
 
     public void testOnClicSignUpButton(){
-        Button loginButton=activity.findViewById(R.id.loginButton);
+        Button loginButton= (Button) activity.findViewById(R.id.loginTwitButton);
         loginButton.performClick();
         final Intent launchIntent = getStartedActivityIntent();
         assertNotNull(launchIntent);
@@ -53,17 +57,25 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
 
 
     public void testMenuTweetButton(){
-        MenuItem twitItem=activity.findViewById(R.menu.twitAction);
+        MenuItem twitItem= (MenuItem) activity.findViewById(R.id.twitAction);
         activity.onOptionsItemSelected(twitItem);
-        LinearLayout tweeterLayout=activity.findViewById(R.id.tweetingPanel);
+        LinearLayout tweeterLayout= (LinearLayout) activity.findViewById(R.id.tweetingPanel);
         assertTrue(tweeterLayout.getVisibility()== View.VISIBLE);
     }
 
 
     public void testMenuMapButton(){
-        MenuItem twitItem=activity.findViewById(R.menu.mapAction);
+        MenuItem twitItem= (MenuItem) activity.findViewById(R.id.mapAction);
         activity.onOptionsItemSelected(twitItem);
-        LinearLayout mapLayout=activity.findViewById(R.id.mapPanel);
+        LinearLayout mapLayout= (LinearLayout) activity.findViewById(R.id.mapPanel);
         assertTrue(mapLayout.getVisibility()== View.VISIBLE);
+    }
+
+    public void testChangeOrientation(){
+        changeableConfig.orientation = Configuration.ORIENTATION_LANDSCAPE; // Phone switches to landscape
+        instrumentResources.updateConfiguration(changeableConfig, instrumentResources.getDisplayMetrics()); // Now the phone is "in landscape"
+        assertEquals(activity.getResources().getConfiguration().orientation, Configuration.ORIENTATION_PORTRAIT); // The activity, however, should be in portrait still
+
+
     }
 }
