@@ -5,28 +5,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:onClick="login"
-        android:id="@+id/button" />
-
-<EditText
+<include layout="@layout/twiting_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/username"/>
-   <EditText
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:id="@+id/password
-       "/>
+    android:layout_gravity="center"/>
+<include layout="@layout/map_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    />
+    <include layout="@layout/map_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"/>
 
 </LinearLayout>
 
-    <!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--android:id="@+id/map"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:name="com.google.android.gms.maps.SupportMapFragment"-->
-        <!--/>-->
+
