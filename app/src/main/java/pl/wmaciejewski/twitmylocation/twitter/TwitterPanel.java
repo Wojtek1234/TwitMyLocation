@@ -10,13 +10,22 @@ import android.widget.Button;
  */
 public class TwitterPanel {
     private Button logginButton,findHashTagButton,tweetLocationButton;
-    public boolean isLogged;
+
+    public boolean isLogged() {
+        return logged;
+    }
+
+    private boolean logged;
 
     public TwitterPanel(View view, SharedPreferences prefs){
 
     }
 
     public void setOnTwittListener(TwitterListener twitterInterface) {
+    }
+
+    public void setLogged(boolean logged) {
+        this.logged = logged;
     }
 
     public interface TwitterListener{

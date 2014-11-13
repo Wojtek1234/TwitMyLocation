@@ -19,17 +19,6 @@ import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 import pl.wmaciejewski.twitmylocation.MainActivity;
 
 
-/**
- * Prepares a OAuthConsumer and OAuthProvider 
- *
- * OAuthConsumer is configured with the consumer key & consumer secret.
- * OAuthProvider is configured with the 3 OAuth endpoints.
- *
- * Execute the OAuthRequestTokenTask to retrieve the request, and authorize the request.
- *
- * After the request is authorized, a callback is made here.
- *
- */
 public class RequestTokenActivity extends Activity {
 
     final String TAG = getClass().getName();

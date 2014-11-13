@@ -21,7 +21,8 @@ public class TwiiterPanelTest extends AndroidTestCase {
     private  TwitterPanel twitterPanel;
     private  static  String test_name="kaczka";
     private  static String test_name2="kaczka";
-
+    private static String test_namel="baczka";
+    private static String  test_namel2="baczka";
 
 
     public void setUp() throws Exception {
@@ -33,7 +34,7 @@ public class TwiiterPanelTest extends AndroidTestCase {
 
     public void testSignUpButton(){
         Button loginButton=(Button)View.inflate(context, R.id.loginTwitButton,null);
-        if(!twitterPanel.isLogged){
+        if(!twitterPanel.isLogged()){
             assertEquals(loginButton.getText().toString(),context.getResources().getString(R.string.loginTwitText));
         }else{
             assertEquals(loginButton.getText().toString(),context.getResources().getString(R.string.logoutTwitText));
@@ -47,6 +48,26 @@ public class TwiiterPanelTest extends AndroidTestCase {
         loginButton.performClick();
         test_name=test_name+"1";
         assertEquals(test_name,test_name2);
+    }
+
+    public void testHashTagClickInterface(){
+        Button hashTag=(Button)View.inflate(context, R.id.findByHash,null);
+        twitterPanel.setOnTwittListener(new MockInterface() );
+        hashTag.performClick();
+        test_name=test_name+"1";
+        assertEquals(test_name,test_name2);
+    }
+
+    public void testLogoutClickInterface(){
+        Button logout=(Button)View.inflate(context, R.id.loginTwitButton,null);
+        twitterPanel.setOnTwittListener(new MockInterface() );
+        twitterPanel.setLogged(false);
+        logout.performClick();
+        test_namel=test_namel+"1";
+        assertFalse(test_namel.equals(test_namel2));
+        twitterPanel.setLogged(true);
+        logout.performClick();
+        assertTrue(test_namel.equals(test_namel2));
     }
 
     public void testTwitClick(){
@@ -95,12 +116,12 @@ public class TwiiterPanelTest extends AndroidTestCase {
 
         @Override
         public void onLogOutDemand() {
-
+            test_namel2=test_namel2+"1";
         }
 
         @Override
         public void onFindHashTag(Intent hashTagIntent) {
-
+            test_name2=test_name2+"1";
         }
     }
 }

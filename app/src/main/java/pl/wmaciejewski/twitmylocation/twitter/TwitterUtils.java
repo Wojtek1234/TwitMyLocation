@@ -2,8 +2,13 @@ package pl.wmaciejewski.twitmylocation.twitter;
 
 import android.content.SharedPreferences;
 
+import java.util.List;
+
 import oauth.signpost.OAuth;
 import pl.wmaciejewski.twitmylocation.twitter.exception.LoginFailException;
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -46,5 +51,19 @@ public class TwitterUtils {
 
     public  void sendTweet(String msg) throws TwitterException {
         twitter.updateStatus(msg);
+    }
+
+    public List<Status> getTwitterStatusList(String searchHashTag) throws TwitterException {
+
+        Query query = new Query(searchHashTag);
+        QueryResult twitResult = requestTwittersQuery(query);
+        return twitResult.getTweets();
+
+    }
+
+    private QueryResult requestTwittersQuery(Query query) throws TwitterException {
+        QueryResult result = twitter.search(query);
+        return result;
+
     }
 }
