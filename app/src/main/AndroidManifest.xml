@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".RequestTokenActivity" android:launchMode="singleTask"
+        <activity android:name=".twitter.RequestTokenActivity" android:launchMode="singleTask"
             android:label="Login to Twitter">
         <intent-filter>
             <action android:name="android.intent.action.VIEW" />

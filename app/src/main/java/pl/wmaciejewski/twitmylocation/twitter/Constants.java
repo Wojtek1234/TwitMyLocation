@@ -1,4 +1,4 @@
-package pl.wmaciejewski.twitmylocation;
+package pl.wmaciejewski.twitmylocation.twitter;
 
 /**
  * Created by w.maciejewski on 2014-11-12.

@@ -3,9 +3,12 @@ package pl.wmaciejewski.twitmylocation;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.test.ActivityUnitTestCase;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
+import pl.wmaciejewski.twitmylocation.twitter.RequestTokenActivity;
 
 /**
  * Created by Wojtek on 2014-11-12.
@@ -47,15 +50,20 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         assertEquals(launchIntent.getClass().getName(),RequestTokenActivity.class.getName());
     }
 
-    public void testSetPositionOnMap(){
 
+
+    public void testMenuTweetButton(){
+        MenuItem twitItem=activity.findViewById(R.menu.twitAction);
+        activity.onOptionsItemSelected(twitItem);
+        LinearLayout tweeterLayout=activity.findViewById(R.id.tweetingPanel);
+        assertTrue(tweeterLayout.getVisibility()== View.VISIBLE);
     }
 
-    public void testGetLocalImage(){
 
-    }
-
-    public void testSendTwitButton(){
-
+    public void testMenuMapButton(){
+        MenuItem twitItem=activity.findViewById(R.menu.mapAction);
+        activity.onOptionsItemSelected(twitItem);
+        LinearLayout mapLayout=activity.findViewById(R.id.mapPanel);
+        assertTrue(mapLayout.getVisibility()== View.VISIBLE);
     }
 }

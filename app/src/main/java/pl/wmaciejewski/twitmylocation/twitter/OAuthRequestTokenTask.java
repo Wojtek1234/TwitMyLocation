@@ -1,4 +1,4 @@
-package pl.wmaciejewski.twitmylocation;
+package pl.wmaciejewski.twitmylocation.twitter;
 
 import android.content.Context;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package pl.wmaciejewski.twitmylocation;
+package pl.wmaciejewski.twitmylocation.twitter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +16,7 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
+import pl.wmaciejewski.twitmylocation.MainActivity;
 
 
 /**

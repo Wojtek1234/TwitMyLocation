@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import oauth.signpost.OAuth;
+import pl.wmaciejewski.twitmylocation.twitter.RequestTokenActivity;
 
 
 public class MainActivity extends FragmentActivity {
@@ -21,6 +22,7 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
     }
+
 
 
     public void login(View view) {
