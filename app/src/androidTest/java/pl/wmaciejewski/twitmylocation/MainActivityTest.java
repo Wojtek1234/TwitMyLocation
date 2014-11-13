@@ -1,6 +1,5 @@
 package pl.wmaciejewski.twitmylocation;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -9,12 +8,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import pl.wmaciejewski.twitmylocation.twitter.RequestTokenActivity;
+
 /**
  * Created by Wojtek on 2014-11-12.
  */
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
-    private Activity activity;
+    private MainActivity activity;
     private Intent mStartIntent;
     private Configuration originalConfig; // Treat as read-only - test against for config changes
     private Configuration changeableConfig;
@@ -49,13 +50,13 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         assertTrue(mapLayout.getVisibility()== View.GONE);
     }
 
- /*   public void testOnClicSignUpButton(){
-        Button loginButton= (Button) activity.findViewById(R.id.loginTwitButton);
-        loginButton.performClick();
-        final Intent launchIntent =getStartedActivityIntent() ;
-        assertNotNull(launchIntent);
-        assertEquals(launchIntent.getClass().getName(),RequestTokenActivity.class.getName());
-    }*/
+
+    public void testInterfaceFunction(){
+        Intent intent= new Intent(activity, RequestTokenActivity.class);
+        activity.onLogingDemand(intent);
+
+
+    }
 
 
 
