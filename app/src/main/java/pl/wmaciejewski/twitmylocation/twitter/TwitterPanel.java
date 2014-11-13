@@ -6,31 +6,36 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import pl.wmaciejewski.twitmylocation.R;
 import pl.wmaciejewski.twitmylocation.twitter.exception.LoginFailException;
 
 /**
  * Created by w.maciejewski on 2014-11-13.
  */
-public class TwitterPanel {
+public class TwitterPanel implements Observer {
     private Button logginButton,findHashTagButton,tweetLocationButton;
     private TwitterUtils twitterUtils=TwitterUtils.getInstance();
     private TwitterListener twitterListener;
     private LinearLayout view;
 
-    private boolean logged;
+
 
     public TwitterPanel(LinearLayout view, SharedPreferences prefs){
+        twitterUtils.deleteObservers();
         tryToLogin(prefs);
         logginButton=(Button)view.findViewById(R.id.loginTwitButton);
-        setLoginButtonText(view);
+        logginButton.setEnabled(false);
         logginButton.setOnClickListener(new LoginButOnClick());
+        twitterUtils.addObserver(this);
         this.view=view;
 
     }
 
     private void setLoginButtonText(View view) {
-        if(logged) logginButton.setText(view.getResources().getString(R.string.logoutTwitText));
+        if(twitterUtils.isLogged()) logginButton.setText(view.getResources().getString(R.string.logoutTwitText));
         else logginButton.setText(view.getResources().getString(R.string.loginTwitText));
 
     }
@@ -44,22 +49,28 @@ public class TwitterPanel {
     private void tryToLogin(SharedPreferences prefs) {
         try {
             twitterUtils.authenticat(prefs);
-            logged=true;
+
         } catch (LoginFailException e) {
-            logged=false;
+
         }
     }
 
     public void setOnTwittListener(TwitterListener twitterInterface) {
+        this.twitterListener=twitterInterface;
     }
 
     public void setLogged(boolean logged) {
-        this.logged = logged;
+        twitterUtils.setLogged(logged);
     }
 
     public void login(SharedPreferences prefs) {
 
+    }
 
+    @Override
+    public void update(Observable observable, Object data) {
+        logginButton.setEnabled(true);
+        setLoginButtonText(view);
     }
 
     public interface TwitterListener{
@@ -68,7 +79,7 @@ public class TwitterPanel {
         public void onFindHashTag(Intent hashTagIntent);
     }
     public boolean isLogged() {
-        return logged;
+        return twitterUtils.isLogged();
     }
 
     private Intent createLoginIntent(){
@@ -80,12 +91,12 @@ public class TwitterPanel {
     private class LoginButOnClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if(logged){
+            if(twitterUtils.isLogged()){
                 twitterListener.onLogOutDemand();
-                logged=!logged;
+
             }else{
                 twitterListener.onLogingDemand(createLoginIntent());
-                logged=!logged;
+
             }
             setLoginButtonText(view);
         }

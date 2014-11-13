@@ -60,14 +60,14 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
 
-    public void testInterfaceFunction(){
-        Intent intent= new Intent(activity, RequestTokenActivity.class);
-        activity.onLogingDemand(intent);
-        //TODO i dont know how to test that
-
-        activity.onLogOutDemand();
-
-    }
+//    public void testInterfaceFunction(){
+//        Intent intent= new Intent(activity, RequestTokenActivity.class);
+//       // activity.onLogingDemand(intent);
+//        //TODO i dont know how to test that
+//
+//        activity.onLogOutDemand();
+//
+//    }
 
 
 

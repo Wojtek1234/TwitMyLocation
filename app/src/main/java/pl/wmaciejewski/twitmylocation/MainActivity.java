@@ -34,6 +34,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         setUpMapIfNeeded();
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
         twitterPanel=new TwitterPanel((LinearLayout)findViewById(R.id.tweetingPanel),prefs);
+        twitterPanel.setOnTwittListener(this);
     }
 
     @Override
@@ -45,9 +46,9 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        switch (featureId){
+        switch (item.getItemId()){
             case R.id.twitAction:
-
+                twitterPanel.showPanel();
                 return true;
             case R.id.mapAction:
 
