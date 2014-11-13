@@ -4,8 +4,8 @@ package pl.wmaciejewski.twitmylocation.twitter;
  * Created by w.maciejewski on 2014-11-12.
  */
 public class Constants {
-    public static String CONSUMER_KEY = "2FT2yMNLAbGCGrFXYKZ5EGuY3";
-    public static String CONSUMER_SECRET = "UjHnJbTK2Lg7oF2Qyt7HwBDQwa2E17NQ51NcHXPX7P1spinUD5";
+    public static String CONSUMER_KEY = "My key";
+    public static String CONSUMER_SECRET = "My key";
 
     public static final String REQUEST_URL = "https://api.twitter.com/oauth/request_token";
     public static final String ACCESS_URL = "https://api.twitter.com/oauth/access_token";
