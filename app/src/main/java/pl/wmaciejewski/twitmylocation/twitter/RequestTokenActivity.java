@@ -16,6 +16,10 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
+import oauth.signpost.exception.OAuthCommunicationException;
+import oauth.signpost.exception.OAuthExpectationFailedException;
+import oauth.signpost.exception.OAuthMessageSignerException;
+import oauth.signpost.exception.OAuthNotAuthorizedException;
 import pl.wmaciejewski.twitmylocation.MainActivity;
 
 
@@ -46,22 +50,27 @@ public class RequestTokenActivity extends Activity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final Uri uri = intent.getData();
         if (uri != null && uri.getScheme().equals(Constants.OAUTH_CALLBACK_SCHEME)) {
-            Log.i(TAG, "Callback received : " + uri);
-            Log.i(TAG, "Retrieving Access Token");
-            new RetrieveAccessTokenTask(this,consumer,provider,prefs).execute(uri);
-            finish();
+            new RetrieveAccessTokenTask(consumer,provider,prefs).execute(uri);
+
         }
     }
 
+    private void sendResultIntent(){
+        Intent resultIntent=new Intent(this,MainActivity.class);
+        setResult(MainActivity.RESULT_CODE_LOGGED, resultIntent);
+        finish();
+    }
+
+
     public class RetrieveAccessTokenTask extends AsyncTask<Uri, Void, Void> {
 
-        private Context	context;
+
         private OAuthProvider provider;
         private OAuthConsumer consumer;
         private SharedPreferences prefs;
 
-        public RetrieveAccessTokenTask(Context context, OAuthConsumer consumer,OAuthProvider provider, SharedPreferences prefs) {
-            this.context = context;
+        public RetrieveAccessTokenTask( OAuthConsumer consumer,OAuthProvider provider, SharedPreferences prefs) {
+
             this.consumer = consumer;
             this.provider = provider;
             this.prefs=prefs;
@@ -84,7 +93,7 @@ public class RequestTokenActivity extends Activity {
                 String secret = prefs.getString(OAuth.OAUTH_TOKEN_SECRET, "");
 
                 consumer.setTokenWithSecret(token, secret);
-                context.startActivity(new Intent(context,MainActivity.class));
+                sendResultIntent();
 
             } catch (Exception e) {
                 Log.e(TAG, "OAuth - Access Token Retrieval Error", e);
@@ -95,6 +104,50 @@ public class RequestTokenActivity extends Activity {
 
 
 
+    }
+
+
+    private class OAuthRequestTokenTask extends AsyncTask<Void, Void, Void> {
+
+
+        private Context context;
+        private OAuthProvider provider;
+        private OAuthConsumer consumer;
+
+        public OAuthRequestTokenTask(Context context, OAuthConsumer consumer, OAuthProvider provider) {
+            this.context = context;
+            this.consumer = consumer;
+            this.provider = provider;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+
+
+            final String url;
+            try {
+                url = provider.retrieveRequestToken(consumer, Constants.OAUTH_CALLBACK_URL);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url)).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_FROM_BACKGROUND);
+                context.startActivity(intent);
+
+            } catch (OAuthMessageSignerException e) {
+                e.printStackTrace();
+            } catch (OAuthNotAuthorizedException e) {
+                e.printStackTrace();
+            } catch (OAuthExpectationFailedException e) {
+                e.printStackTrace();
+            } catch (OAuthCommunicationException e) {
+                e.printStackTrace();
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+        }
     }
 
 }

@@ -48,6 +48,15 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         LinearLayout mapLayout= (LinearLayout) activity.findViewById(R.id.mapPanel);
         assertTrue(mapLayout.getVisibility()== View.GONE);
+
+        assertNotNull(activity.findViewById(R.id.findByHash));
+        assertNotNull(activity.findViewById(R.id.findMeMap));
+        assertNotNull(activity.findViewById(R.id.loginTwitButton));
+        assertNotNull(activity.findViewById(R.id.twitMyLocation));
+        assertNotNull(activity.findViewById(R.id.placeMeOnMap));
+
+
+
     }
 
 
