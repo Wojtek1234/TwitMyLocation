@@ -85,7 +85,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
 
     @Override
     public void onLogingDemand(Intent loggingIntent) {
-        startActivityForResult(loggingIntent,REQUEST_LOGIN);
+        startActivityForResult(loggingIntent, REQUEST_LOGIN);
     }
 
     @Override
@@ -93,7 +93,9 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==REQUEST_LOGIN){
             if(resultCode==RESULT_CODE_LOGGED){
+
                 this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                saveTwitterInfo(data);
                 twitterPanel.login(this.prefs);
             }
         }
@@ -109,6 +111,13 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     @Override
     public void onFindHashTag(Intent hashTagIntent) {
 
+    }
+
+    private void saveTwitterInfo(Intent intent){
+        SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        e.putString(PREF_KEY_OAUTH_TOKEN, (String) intent.getExtras().get(PREF_KEY_OAUTH_TOKEN));
+        e.putString(PREF_KEY_OAUTH_SECRET, (String) intent.getExtras().get(PREF_KEY_OAUTH_SECRET));
+        e.commit();
     }
 
 
