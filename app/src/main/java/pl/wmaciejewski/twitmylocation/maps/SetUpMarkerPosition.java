@@ -4,8 +4,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 
 
@@ -20,11 +18,9 @@ public class SetUpMarkerPosition extends AsyncTask<Location,Void,Void> {
     }
     @Override
     protected Void doInBackground(Location... locations) {
-        setUpMap(locations[0]);
+
         return null;
     }
 
-    private void setUpMap(Location loc) {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLatitude(),loc.getLongitude())).title("Me"));
-    }
+
 }

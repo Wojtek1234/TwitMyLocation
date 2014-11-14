@@ -23,7 +23,7 @@ public class GetLocation extends Observable {
         Criteria crit = getCriteria();
         this.locationManager= locationManager;
         String bestProvider = locationManager.getBestProvider(crit, false);
-        lastKnowLocation=locationManager.getLastKnownLocation(bestProvider);
+        lastKnowLocation=locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
         this.locationManager.requestLocationUpdates(bestProvider,5,10,new HereLocationListener() );
     }
 

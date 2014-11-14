@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -25,7 +27,7 @@ public class MapPanel implements Observer {
         this.view=view;
         mMap=map;
         getLocation=new GetLocation((LocationManager) view.getContext().getSystemService(Context.LOCATION_SERVICE) );
-        new SetUpMarkerPosition(mMap).execute(getLocation.getLastKnowLocation());
+        setUpMap(getLocation.getLastKnowLocation());
 
     }
 
@@ -47,6 +49,10 @@ public class MapPanel implements Observer {
 
     }
 
+
+    private void setUpMap(Location loc) {
+        mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLatitude(),loc.getLongitude())).title("Me"));
+    }
 
 
 
