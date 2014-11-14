@@ -36,6 +36,7 @@ public class GetLocation extends Observable {
 
     public void updateLastKnowLocation(Location location) {
         lastKnowLocation=location;
+        setChanged();
         notifyObservers(lastKnowLocation);
     }
 

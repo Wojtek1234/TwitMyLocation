@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import oauth.signpost.OAuth;
+
 import pl.wmaciejewski.twitmylocation.R;
 
 public class TwiiterPanelTest extends AndroidTestCase {
@@ -84,13 +84,7 @@ public class TwiiterPanelTest extends AndroidTestCase {
 
     }
 
-    private void clearCredentials() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        final SharedPreferences.Editor edit = prefs.edit();
-        edit.remove(OAuth.OAUTH_TOKEN);
-        edit.remove(OAuth.OAUTH_TOKEN_SECRET);
-        edit.commit();
-    }
+
 
 
 
@@ -98,10 +92,7 @@ public class TwiiterPanelTest extends AndroidTestCase {
         final String LOGGED_USER_TOKEN = "2869153881-AaWTaeQHKvPBBGBp51l9UTmFmeSiPf6dtOTXWQX";
         final String LOGGED_USER_SECRET = "7bonzofF0HaSc5IwXGIzDXD1azovpQBWCuax15Vyl4qDZ";
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        final SharedPreferences.Editor edit = prefs.edit();
-        edit.putString(OAuth.OAUTH_TOKEN, LOGGED_USER_TOKEN);
-        edit.putString(OAuth.OAUTH_TOKEN_SECRET,LOGGED_USER_SECRET);
-        edit.commit();
+
         TwitterUtils twitterUtils= TwitterUtils.getInstance();
         twitterUtils.authenticat(prefs);
 

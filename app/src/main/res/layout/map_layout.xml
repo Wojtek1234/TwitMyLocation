@@ -23,7 +23,7 @@
         android:layout_gravity="center"
         android:padding="15dp"
         android:background="?android:selectableItemBackground"
-        android:drawableLeft="@drawable/hashtag"
+        android:drawableLeft="@drawable/place_me"
         android:text="@string/placeMeOnMap"/>
 
 

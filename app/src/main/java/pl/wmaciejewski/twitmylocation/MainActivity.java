@@ -12,9 +12,8 @@ import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
+import pl.wmaciejewski.twitmylocation.maps.MapPanel;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterPanel;
 
 
@@ -26,6 +25,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     private SharedPreferences prefs;
     private GoogleMap mMap;
     private TwitterPanel twitterPanel;
+    private MapPanel mapPanel;
 
 
     @Override
@@ -36,6 +36,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
         twitterPanel=new TwitterPanel((LinearLayout)findViewById(R.id.tweetingPanel),prefs);
         twitterPanel.setOnTwittListener(this);
+        mapPanel=new MapPanel(findViewById(R.id.mapPanel),mMap);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
                 twitterPanel.showPanel();
                 return true;
             case R.id.mapAction:
-
+                mapPanel.showPanel();
                 return true;
             default:
                return super.onMenuItemSelected(featureId, item);
@@ -67,15 +68,11 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         if (mMap == null) {
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment))
                     .getMap();
-            if (mMap != null) {
-                setUpMap();
-            }
+
         }
     }
 
-    private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-    }
+
 
     @Override
     public void onLogingDemand(Intent loggingIntent) {
