@@ -10,7 +10,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import pl.wmaciejewski.twitmylocation.R;
-import pl.wmaciejewski.twitmylocation.twitter.exception.LoginFailException;
 
 /**
  * Created by w.maciejewski on 2014-11-13.
@@ -25,7 +24,7 @@ public class TwitterPanel implements Observer {
 
     public TwitterPanel(LinearLayout view, SharedPreferences prefs){
         twitterUtils.deleteObservers();
-        tryToLogin(prefs);
+        login(prefs);
         logginButton=(Button)view.findViewById(R.id.loginTwitButton);
         logginButton.setEnabled(false);
         logginButton.setOnClickListener(new LoginButOnClick());
@@ -46,15 +45,6 @@ public class TwitterPanel implements Observer {
 
    }
 
-    private void tryToLogin(SharedPreferences prefs) {
-        try {
-            twitterUtils.authenticat(prefs);
-
-        } catch (LoginFailException e) {
-
-        }
-    }
-
     public void setOnTwittListener(TwitterListener twitterInterface) {
         this.twitterListener=twitterInterface;
     }
@@ -63,8 +53,9 @@ public class TwitterPanel implements Observer {
         twitterUtils.setLogged(logged);
     }
 
-    public void login(SharedPreferences prefs) {
 
+    public void login(SharedPreferences prefs) {
+            twitterUtils.authenticat(prefs);
     }
 
     @Override

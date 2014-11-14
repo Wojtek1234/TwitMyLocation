@@ -6,8 +6,7 @@ import android.os.AsyncTask;
 import java.util.List;
 import java.util.Observable;
 
-import oauth.signpost.OAuth;
-import pl.wmaciejewski.twitmylocation.twitter.exception.LoginFailException;
+import pl.wmaciejewski.twitmylocation.MainActivity;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -15,6 +14,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -24,6 +24,7 @@ public class TwitterUtils extends Observable{
     private static TwitterUtils instance;
     private String token, secret;
     private AccessToken accessToken;
+
 
     public Twitter getTwitter() {
         return twitter;
@@ -45,12 +46,21 @@ public class TwitterUtils extends Observable{
     private TwitterUtils() {
     }
 
-    public void authenticat(SharedPreferences prefs) throws LoginFailException {
-        token = prefs.getString(OAuth.OAUTH_TOKEN, "");
-        secret = prefs.getString(OAuth.OAUTH_TOKEN_SECRET, "");
+    public void authenticat(SharedPreferences prefs) {
+        token = prefs.getString(MainActivity.PREF_KEY_OAUTH_TOKEN, "");
+        secret = prefs.getString(MainActivity.PREF_KEY_OAUTH_SECRET, "");
         accessToken = new AccessToken(token, secret);
         TryToAutorize tryToAutorize = new TryToAutorize();
         tryToAutorize.execute(accessToken);
+    }
+
+    public void authenticat(RequestToken requestToken,String verifier) {
+        try {
+             accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
+
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setUpTwitter(Twitter twitter, boolean failed){

@@ -6,12 +6,13 @@ import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 
 public class GetLocationTest extends AndroidTestCase {
-    private Context context= new RenamingDelegatingContext(getContext(), "test_");
+    private Context context;
     private GetLocation getLocation;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        context= new RenamingDelegatingContext(getContext(), "test_");
         this.getLocation=new GetLocation((LocationManager)context.getSystemService(Context.LOCATION_SERVICE));
     }
     public void testCurrentLocation(){

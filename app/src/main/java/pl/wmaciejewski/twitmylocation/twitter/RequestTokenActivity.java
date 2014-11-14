@@ -3,49 +3,58 @@ package pl.wmaciejewski.twitmylocation.twitter;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.widget.Toast;
 
-import oauth.signpost.OAuth;
-import oauth.signpost.OAuthConsumer;
-import oauth.signpost.OAuthProvider;
-import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
-import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
-import oauth.signpost.exception.OAuthCommunicationException;
-import oauth.signpost.exception.OAuthExpectationFailedException;
-import oauth.signpost.exception.OAuthMessageSignerException;
-import oauth.signpost.exception.OAuthNotAuthorizedException;
 import pl.wmaciejewski.twitmylocation.MainActivity;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
 
 public class RequestTokenActivity extends Activity {
+    public static final int WEBVIEW_REQUEST_CODE = 254;
+    public static final int WEBVIEW_REQUEST_LOGGED = 255;
 
-    final String TAG = getClass().getName();
 
-
-
+    private RequestToken requestToken;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Twitter twitter = TwitterUtils.getInstance().getTwitter();
-        RetrieveAccessTokenTask retrieveAccessTokenTask=new RetrieveAccessTokenTask();
+        RetrieveAccessTokenTask retrieveAccessTokenTask = new RetrieveAccessTokenTask();
         retrieveAccessTokenTask.execute(twitter);
 
     }
 
-    public void startURLActivity(RequestToken requestToken){
+    public void startURLActivity(RequestToken requestToken) {
         //TODO http://javatechig.com/android/how-to-integrate-twitter-in-android-application
-        this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(requestToken.getAuthenticationURL())));
+        this.requestToken = requestToken;
+        final Intent intent = new Intent(this, WebViewActivity.class);
+        intent.putExtra(WebViewActivity.EXTRA_URL, requestToken.getAuthenticationURL());
+        startActivityForResult(intent, WEBVIEW_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == this.WEBVIEW_REQUEST_CODE) {
+            if (resultCode == this.WEBVIEW_REQUEST_LOGGED) {
+                try {
+                    String verifier = data.getExtras().getString(Constants.VERIFIER);
+                    Twitter twitter = TwitterUtils.getInstance().getTwitter();
+                    AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
+                    Intent intent = saveTwitterInfo(accessToken);
+                    sendResultIntent(intent);
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 
     @Override
@@ -58,8 +67,16 @@ public class RequestTokenActivity extends Activity {
         }
     }
 
-    private void sendResultIntent(){
-        Intent resultIntent=new Intent(this,MainActivity.class);
+    private Intent saveTwitterInfo(AccessToken accessToken) {
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        setResult(MainActivity.RESULT_CODE_LOGGED, resultIntent);
+        resultIntent.putExtra(MainActivity.PREF_KEY_OAUTH_TOKEN, accessToken.getToken());
+        resultIntent.putExtra(MainActivity.PREF_KEY_OAUTH_SECRET, accessToken.getTokenSecret());
+        return resultIntent;
+    }
+
+    private void sendResultIntent(Intent resultIntent) {
+
         setResult(MainActivity.RESULT_CODE_LOGGED, resultIntent);
         finish();
     }
@@ -71,7 +88,7 @@ public class RequestTokenActivity extends Activity {
         @Override
         protected RequestToken doInBackground(Twitter... params) {
             try {
-               return  params[0].getOAuthRequestToken(Constants.OAUTH_CALLBACK_URL);
+                return params[0].getOAuthRequestToken(Constants.OAUTH_CALLBACK_URL);
 
 
             } catch (TwitterException e) {
@@ -86,8 +103,6 @@ public class RequestTokenActivity extends Activity {
             startURLActivity(requestToken);
         }
     }
-
-
 
 
 }

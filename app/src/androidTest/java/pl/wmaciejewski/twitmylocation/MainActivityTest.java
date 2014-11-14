@@ -1,10 +1,11 @@
 package pl.wmaciejewski.twitmylocation;
 
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.test.ActivityInstrumentationTestCase2;
-import android.view.MenuItem;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -60,37 +61,35 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
 
-//    public void testInterfaceFunction(){
-//        Intent intent= new Intent(activity, RequestTokenActivity.class);
-//       // activity.onLogingDemand(intent);
-//        //TODO i dont know how to test that
-//
-//        activity.onLogOutDemand();
-//
-//    }
+    public void testInterfaceFunction(){
+        Intent intent= new Intent(activity, RequestTokenActivity.class);
+        Instrumentation.ActivityMonitor am = getInstrumentation().addMonitor(RequestTokenActivity.class.getName(), null, false);
+        activity.onLogingDemand(intent);
 
-
-
-    public void testMenuTweetButton(){
-        MenuItem twitItem= (MenuItem) activity.findViewById(R.id.twitAction);
-        activity.onOptionsItemSelected(twitItem);
-        LinearLayout tweeterLayout= (LinearLayout) activity.findViewById(R.id.tweetingPanel);
-        assertTrue(tweeterLayout.getVisibility()== View.VISIBLE);
+        RequestTokenActivity requestTokenActivity =(RequestTokenActivity)am.waitForActivityWithTimeout( 1000);
+        assertNotNull(requestTokenActivity);
+        assertEquals(RequestTokenActivity.class,requestTokenActivity.getClass());
+        requestTokenActivity.finish();
+        getInstrumentation().removeMonitor(am);
     }
 
 
-    public void testMenuMapButton(){
-        MenuItem twitItem= (MenuItem) activity.findViewById(R.id.mapAction);
-        activity.onOptionsItemSelected(twitItem);
+
+
+    public void testMenuButtons(){
+
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
+        getInstrumentation().invokeMenuActionSync(activity, R.id.twitAction, 0);
+
+        LinearLayout tweeterLayout= (LinearLayout) activity.findViewById(R.id.tweetingPanel);
+        assertTrue(tweeterLayout.getVisibility()== View.VISIBLE);
+        getInstrumentation().invokeMenuActionSync(activity, R.id.mapAction, 0);
         LinearLayout mapLayout= (LinearLayout) activity.findViewById(R.id.mapPanel);
         assertTrue(mapLayout.getVisibility()== View.VISIBLE);
     }
 
- /*   public void testChangeOrientation(){
-        changeableConfig.orientation = Configuration.ORIENTATION_LANDSCAPE; // Phone switches to landscape
-        instrumentResources.updateConfiguration(changeableConfig, instrumentResources.getDisplayMetrics()); // Now the phone is "in landscape"
-        assertEquals(activity.getResources().getConfiguration().orientation, Configuration.ORIENTATION_PORTRAIT); // The activity, however, should be in portrait still
 
 
-    }*/
+
+
 }

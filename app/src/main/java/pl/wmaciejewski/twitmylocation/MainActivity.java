@@ -15,13 +15,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import oauth.signpost.OAuth;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterPanel;
 
 
 public class MainActivity extends FragmentActivity implements TwitterPanel.TwitterListener{
     private static final int REQUEST_LOGIN =101 ;
     public static final int RESULT_CODE_LOGGED=102;
+    public static String PREF_KEY_OAUTH_TOKEN="Key_token";
+    public static String PREF_KEY_OAUTH_SECRET="secret_token";
     private SharedPreferences prefs;
     private GoogleMap mMap;
     private TwitterPanel twitterPanel;
@@ -62,8 +63,8 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     private void clearCredentials() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor edit = prefs.edit();
-        edit.remove(OAuth.OAUTH_TOKEN);
-        edit.remove(OAuth.OAUTH_TOKEN_SECRET);
+        edit.remove(PREF_KEY_OAUTH_TOKEN);
+        edit.remove(PREF_KEY_OAUTH_SECRET);
         edit.commit();
     }
 
@@ -109,6 +110,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     public void onFindHashTag(Intent hashTagIntent) {
 
     }
+
 
 
 }

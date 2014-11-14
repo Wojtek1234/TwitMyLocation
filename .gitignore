@@ -6,3 +6,4 @@
 /build
 .idea
 app/src/main/java/pl/wmaciejewski/twitmylocation/twitter/Constants.java
+app/src/main/AndroidManifest.xml
