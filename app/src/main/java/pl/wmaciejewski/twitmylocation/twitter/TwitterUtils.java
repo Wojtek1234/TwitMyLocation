@@ -98,6 +98,16 @@ public class TwitterUtils extends Observable{
         this.logged = logged;
     }
 
+    public Twitter getBrandNewTwitter() {
+        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+        configurationBuilder.setOAuthConsumerKey(Constants.CONSUMER_KEY);
+        configurationBuilder.setOAuthConsumerSecret(Constants.CONSUMER_SECRET);
+        Configuration configuration = configurationBuilder.build();
+
+        return new TwitterFactory(configuration).getInstance();
+    }
+
+
     private class TryToAutorize extends AsyncTask<AccessToken, Void, Twitter> {
          boolean failed=false;
         @Override
@@ -116,13 +126,8 @@ public class TwitterUtils extends Observable{
             }
         }
 
-        private Twitter getBrandNewTwitter() {
-            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.setOAuthConsumerKey(Constants.CONSUMER_KEY);
-            configurationBuilder.setOAuthConsumerSecret(Constants.CONSUMER_SECRET);
-            Configuration configuration = configurationBuilder.build();
-            return new TwitterFactory(configuration).getInstance();
-        }
+
+
 
         @Override
         protected void onPostExecute(Twitter twitter) {

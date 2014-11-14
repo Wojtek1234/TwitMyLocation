@@ -60,13 +60,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
 
     }
 
-    private void clearCredentials() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        final SharedPreferences.Editor edit = prefs.edit();
-        edit.remove(PREF_KEY_OAUTH_TOKEN);
-        edit.remove(PREF_KEY_OAUTH_SECRET);
-        edit.commit();
-    }
+
 
 
     private void setUpMapIfNeeded() {
@@ -106,6 +100,14 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         clearCredentials();
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
         twitterPanel.login(prefs);
+    }
+
+    private void clearCredentials() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor edit = prefs.edit();
+        edit.remove(PREF_KEY_OAUTH_TOKEN);
+        edit.remove(PREF_KEY_OAUTH_SECRET);
+        edit.commit();
     }
 
     @Override

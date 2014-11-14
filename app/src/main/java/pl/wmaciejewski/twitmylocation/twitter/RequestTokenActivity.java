@@ -2,11 +2,8 @@ package pl.wmaciejewski.twitmylocation.twitter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
 import pl.wmaciejewski.twitmylocation.MainActivity;
 import twitter4j.Twitter;
@@ -26,46 +23,36 @@ public class RequestTokenActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Twitter twitter = TwitterUtils.getInstance().getTwitter();
-        RetrieveAccessTokenTask retrieveAccessTokenTask = new RetrieveAccessTokenTask();
+        RetrieveResultTokenTask retrieveAccessTokenTask = new RetrieveResultTokenTask();
         retrieveAccessTokenTask.execute(twitter);
 
     }
 
     public void startURLActivity(RequestToken requestToken) {
-        //TODO http://javatechig.com/android/how-to-integrate-twitter-in-android-application
-        this.requestToken = requestToken;
-        final Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra(WebViewActivity.EXTRA_URL, requestToken.getAuthenticationURL());
-        startActivityForResult(intent, WEBVIEW_REQUEST_CODE);
+        try {
+            //TODO http://javatechig.com/android/how-to-integrate-twitter-in-android-application
+            this.requestToken = requestToken;
+            final Intent intent = new Intent(this, WebViewActivity.class);
+            intent.putExtra(WebViewActivity.EXTRA_URL, requestToken.getAuthenticationURL());
+            startActivityForResult(intent, WEBVIEW_REQUEST_CODE);
+        } catch (NullPointerException ne) {
+            //TODO dialog z fuckupem
+            finish();
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == this.WEBVIEW_REQUEST_CODE) {
             if (resultCode == this.WEBVIEW_REQUEST_LOGGED) {
-                try {
-                    String verifier = data.getExtras().getString(Constants.VERIFIER);
-                    Twitter twitter = TwitterUtils.getInstance().getTwitter();
-                    AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
-                    Intent intent = saveTwitterInfo(accessToken);
-                    sendResultIntent(intent);
-                } catch (TwitterException e) {
-                    e.printStackTrace();
-                }
-
+                String verifier = data.getExtras().getString(Constants.VERIFIER);
+                Twitter twitter = TwitterUtils.getInstance().getTwitter();
+                RetrieveAccesTokenTask retrieveAccesTokenTask = new RetrieveAccesTokenTask(verifier);
+                retrieveAccesTokenTask.execute(twitter);
             }
         }
     }
 
-    @Override
-    public void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        Uri uri = getIntent().getData();
-        if (uri != null && uri.toString().startsWith(Constants.OAUTH_CALLBACK_URL)) {
-            String verifier = uri.getQueryParameter(Constants.AUTHORIZE_URL);
-        }
-    }
 
     private Intent saveTwitterInfo(AccessToken accessToken) {
         Intent resultIntent = new Intent(this, MainActivity.class);
@@ -75,27 +62,35 @@ public class RequestTokenActivity extends Activity {
         return resultIntent;
     }
 
-    private void sendResultIntent(Intent resultIntent) {
-
-        setResult(MainActivity.RESULT_CODE_LOGGED, resultIntent);
-        finish();
+    private void sendResultIntent(AccessToken accessToken) {
+        try {
+            Intent resultIntent = saveTwitterInfo(accessToken);
+            setResult(MainActivity.RESULT_CODE_LOGGED, resultIntent);
+            finish();
+        } catch (NullPointerException ne) {
+            //TODO dialog z fuckupem
+            finish();
+        }
     }
 
 
-    public class RetrieveAccessTokenTask extends AsyncTask<Twitter, Void, RequestToken> {
-
-
+    public class RetrieveResultTokenTask extends AsyncTask<Twitter, Void, RequestToken> {
         @Override
         protected RequestToken doInBackground(Twitter... params) {
             try {
                 return params[0].getOAuthRequestToken(Constants.OAUTH_CALLBACK_URL);
 
-
             } catch (TwitterException e) {
                 e.printStackTrace();
-                return null;
+                Twitter twitter;
+                twitter = TwitterUtils.getInstance().getBrandNewTwitter();
+                try {
+                    return twitter.getOAuthRequestToken(Constants.OAUTH_CALLBACK_URL);
+                } catch (TwitterException e1) {
+                    e1.printStackTrace();
+                    return null;
+                }
             }
-
         }
 
         @Override
@@ -104,5 +99,29 @@ public class RequestTokenActivity extends Activity {
         }
     }
 
+    public class RetrieveAccesTokenTask extends AsyncTask<Twitter, Void, AccessToken> {
+
+        String verifier;
+
+        public RetrieveAccesTokenTask(String string) {
+            verifier = string;
+        }
+
+        @Override
+        protected AccessToken doInBackground(Twitter... params) {
+
+            try {
+                return params[0].getOAuthAccessToken(requestToken, verifier);
+            } catch (TwitterException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(AccessToken accessToken) {
+            sendResultIntent(accessToken);
+        }
+    }
 
 }
