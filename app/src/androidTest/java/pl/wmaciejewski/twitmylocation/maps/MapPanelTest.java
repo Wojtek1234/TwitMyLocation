@@ -29,7 +29,7 @@ public class MapPanelTest extends ActivityInstrumentationTestCase2<MainActivity>
         super.setUp();
         MainActivity mainActivity=getActivity();
 
-        ll= (LinearLayout) View.inflate(context, R.layout.map_layout, null);
+        ll= (LinearLayout) mainActivity.findViewById(R.id.mapPanel);
         GoogleMap mMap = ((SupportMapFragment) mainActivity.getSupportFragmentManager().findFragmentById(R.id.mapFragment))
                 .getMap();
         mapPanel =new MapPanel(ll,mMap);

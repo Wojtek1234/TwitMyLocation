@@ -17,10 +17,7 @@ import pl.wmaciejewski.twitmylocation.twitter.RequestTokenActivity;
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     private MainActivity activity;
-    private Intent mStartIntent;
-    private Configuration originalConfig; // Treat as read-only - test against for config changes
-    private Configuration changeableConfig;
-    private Resources instrumentResources;
+
 
     public MainActivityTest() {
         super(MainActivity.class);
@@ -31,13 +28,14 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     protected void setUp() throws Exception {
         super.setUp();
         activity = getActivity();
-        instrumentResources=getInstrumentation().getTargetContext().getResources();
+
     }
 
     @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
 
+        activity.finish();
+        super.tearDown();
     }
 
     public void testUI(){
@@ -71,6 +69,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         assertEquals(RequestTokenActivity.class,requestTokenActivity.getClass());
         requestTokenActivity.finish();
         getInstrumentation().removeMonitor(am);
+
+
     }
 
 
