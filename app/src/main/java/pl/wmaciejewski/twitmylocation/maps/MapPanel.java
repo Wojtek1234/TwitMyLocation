@@ -20,13 +20,13 @@ public class MapPanel implements Observer {
     private final GetLocation getLocation;
     private final View view;
     private Location currentLocation;
-    Button finMeOnMap,placeMeOnMap;
+    Button finMeOnMap, placeMeOnMap;
     private GoogleMap mMap;
 
-    public MapPanel(View view, GoogleMap map){
-        this.view=view;
-        mMap=map;
-        getLocation=new GetLocation((LocationManager) view.getContext().getSystemService(Context.LOCATION_SERVICE) );
+    public MapPanel(View view, GoogleMap map) {
+        this.view = view;
+        mMap = map;
+        getLocation = new GetLocation((LocationManager) view.getContext().getSystemService(Context.LOCATION_SERVICE));
         setUpMap(getLocation.getLastKnowLocation());
 
     }
@@ -38,22 +38,25 @@ public class MapPanel implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        currentLocation=(Location)o;
+        currentLocation = (Location) o;
     }
 
 
-
-    public void showPanel(){
-        if(this.view.getVisibility()==View.GONE) this.view.setVisibility(View.VISIBLE);
+    public void showPanel() {
+        if (this.view.getVisibility() == View.GONE) this.view.setVisibility(View.VISIBLE);
         else this.view.setVisibility(View.GONE);
 
     }
 
 
     private void setUpMap(Location loc) {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLatitude(),loc.getLongitude())).title("Me"));
-    }
+        try {
+            mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude())).title("Me"));
+        } catch (NullPointerException ne) {
 
+        }
+
+    }
 
 
 }

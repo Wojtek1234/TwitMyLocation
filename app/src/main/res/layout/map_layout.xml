@@ -3,6 +3,7 @@
     android:orientation="vertical" android:layout_width="200dp"
     android:id="@+id/mapPanel"
     android:layout_height="match_parent"
+    android:background="@color/trans_black"
     android:visibility="gone">
 
     <Button
@@ -11,7 +12,6 @@
         android:id="@+id/findMeMap"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:padding="15dp"
         android:background="?android:selectableItemBackground"
         android:drawableLeft="@drawable/findme"
         android:text="@string/findMeOnMap"/>
@@ -21,7 +21,6 @@
         android:id="@+id/placeMeOnMap"
         android:layout_margin="10dp"
         android:layout_gravity="center"
-        android:padding="15dp"
         android:background="?android:selectableItemBackground"
         android:drawableLeft="@drawable/place_me"
         android:text="@string/placeMeOnMap"/>

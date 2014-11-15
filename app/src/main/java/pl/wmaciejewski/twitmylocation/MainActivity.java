@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import pl.wmaciejewski.twitmylocation.maps.MapPanel;
@@ -66,7 +67,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
 
     private void setUpMapIfNeeded() {
         if (mMap == null) {
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment))
+            mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapFragment))
                     .getMap();
 
         }

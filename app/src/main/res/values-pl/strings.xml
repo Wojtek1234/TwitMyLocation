@@ -4,7 +4,7 @@
     <string name="app_name">TwitMyLocation</string>
     <string name="action_settings">Settings</string>
     <string name="loginTwitText">Zaloguj</string>
-    <string name="logoutTwitText" translatable="false">Wyloguj</string>
+    <string name="logoutTwitText">Wyloguj</string>
     <string name="findByHashText">Znajdź</string>
     <string name="TwitMyLocation">Twitnij gdzie jestem!!!</string>
     <string name="findMeOnMap">Znajdź mnie!</string>

@@ -57,13 +57,21 @@ public class WebViewActivity extends Activity {
             if (url.contains(Constants.OAUTH_CALLBACK_URL)) {
                 Uri uri = Uri.parse(url);
 
-                String verifier = uri.getQueryParameter(Constants.VERIFIER);
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(Constants.VERIFIER, verifier);
-                setResult(RequestTokenActivity.WEBVIEW_REQUEST_LOGGED, resultIntent);
+                    String verifier = uri.getQueryParameter(Constants.VERIFIER);
+                    if(verifier!=null) {
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra(Constants.VERIFIER, verifier);
+                        setResult(RequestTokenActivity.WEBVIEW_REQUEST_LOGGED, resultIntent);
 
-                finish();
-                return true;
+                        finish();
+                        return true;
+                    }else{
+                        Intent resultIntent = new Intent();
+                        setResult(RequestTokenActivity.WEBVIEW_REQUEST_NOTLOGGED, resultIntent);
+                        finish();
+                        return true;
+                    }
+
             }
             return false;
         }

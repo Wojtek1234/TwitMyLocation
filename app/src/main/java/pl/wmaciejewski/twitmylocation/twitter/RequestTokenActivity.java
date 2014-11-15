@@ -15,6 +15,7 @@ import twitter4j.auth.RequestToken;
 public class RequestTokenActivity extends Activity {
     public static final int WEBVIEW_REQUEST_CODE = 254;
     public static final int WEBVIEW_REQUEST_LOGGED = 255;
+    public static final int WEBVIEW_REQUEST_NOTLOGGED=256;
 
 
     private RequestToken requestToken;
@@ -49,6 +50,8 @@ public class RequestTokenActivity extends Activity {
                 Twitter twitter = TwitterUtils.getInstance().getTwitter();
                 RetrieveAccesTokenTask retrieveAccesTokenTask = new RetrieveAccesTokenTask(verifier);
                 retrieveAccesTokenTask.execute(twitter);
+            }else if(resultCode==WEBVIEW_REQUEST_NOTLOGGED){
+                finish();
             }
         }
     }
