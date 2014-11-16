@@ -59,7 +59,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
 
-    public void testInterfaceFunction(){
+/*    public void testInterfaceFunction(){
         Intent intent= new Intent(activity, RequestTokenActivity.class);
         Instrumentation.ActivityMonitor am = getInstrumentation().addMonitor(RequestTokenActivity.class.getName(), null, false);
         activity.onLogingDemand(intent);
@@ -71,7 +71,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         getInstrumentation().removeMonitor(am);
 
 
-    }
+    }*/
 
 
 

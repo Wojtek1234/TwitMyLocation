@@ -20,19 +20,14 @@ public class GetLocation extends Observable {
 
     public GetLocation(LocationManager locationManager){
 
-        Criteria crit = getCriteria();
+
         this.locationManager= locationManager;
-        String bestProvider = locationManager.getBestProvider(crit, false);
-        lastKnowLocation=locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
-        this.locationManager.requestLocationUpdates(bestProvider,5,10,new HereLocationListener() );
+        String provider = locationManager.GPS_PROVIDER;
+        lastKnowLocation=locationManager.getLastKnownLocation(provider);
+        this.locationManager.requestLocationUpdates(provider,5,10,new HereLocationListener() );
     }
 
-    private Criteria getCriteria() {
-        Criteria crit = new Criteria();
-        crit.setAccuracy(Criteria.ACCURACY_FINE);
-        crit.setPowerRequirement(Criteria.POWER_LOW);
-        return crit;
-    }
+
 
     public void updateLastKnowLocation(Location location) {
         lastKnowLocation=location;

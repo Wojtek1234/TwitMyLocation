@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import pl.wmaciejewski.twitmylocation.MainActivity;
@@ -30,19 +31,14 @@ public class MapPanelTest extends ActivityInstrumentationTestCase2<MainActivity>
         MainActivity mainActivity=getActivity();
 
         ll= (LinearLayout) mainActivity.findViewById(R.id.mapPanel);
-        GoogleMap mMap = ((SupportMapFragment) mainActivity.getSupportFragmentManager().findFragmentById(R.id.mapFragment))
+        GoogleMap mMap = ((MapFragment) mainActivity.getFragmentManager().findFragmentById(R.id.mapFragment))
                 .getMap();
         mapPanel =new MapPanel(ll,mMap);
 
     }
 
     public void testFindMeOnMapClick(){
-        MockLocationProvider mock = new MockLocationProvider(LocationManager.GPS_PROVIDER, context);
-        mock.pushLocation(52.218887, 21.024797);
-        Button findMeOnMap=(Button)ll.findViewById(R.id.findMeMap);
-        findMeOnMap.performClick();
-        Location loc=mapPanel.getCurrentLocation();
-        assertEquals(mock.getMockLocation(),loc);
+
 
     }
 

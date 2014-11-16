@@ -13,8 +13,8 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.User;
 import twitter4j.auth.AccessToken;
-import twitter4j.auth.RequestToken;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -24,6 +24,8 @@ public class TwitterUtils extends Observable{
     private static TwitterUtils instance;
     private String token, secret;
     private AccessToken accessToken;
+    private User user;
+
 
 
     public Twitter getTwitter() {
@@ -54,14 +56,6 @@ public class TwitterUtils extends Observable{
         tryToAutorize.execute(accessToken);
     }
 
-    public void authenticat(RequestToken requestToken,String verifier) {
-        try {
-             accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
-
-        } catch (TwitterException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void setUpTwitter(Twitter twitter, boolean failed){
             logged=!failed;
@@ -69,6 +63,10 @@ public class TwitterUtils extends Observable{
             setChanged();
             notifyObservers();
 
+    }
+
+    public User getUser() {
+        return user;
     }
 
 
@@ -118,7 +116,7 @@ public class TwitterUtils extends Observable{
 
             try {
                 twitter.getAccountSettings();
-
+                user=twitter.showUser(twitter.getId());
                 return twitter;
             } catch (TwitterException e) {
                 failed=true;

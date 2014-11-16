@@ -2,11 +2,13 @@ package pl.wmaciejewski.twitmylocation.maps;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.lang.annotation.Target;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,13 +21,9 @@ import twitter4j.User;
 /**
  * Created by Wojtek on 2014-11-16.
  */
-public class CreateMarkerIcon  implements Observer{
-    private View view;
-public CreateMarkerIcon(View view){
-    this.view=view;
-    TwitterUtils.getInstance().addObserver(this);
-}
-public Bitmap createIcon(){
+public class CreateMarkerIcon  {
+
+public Bitmap createIcon(View view){
     if(TwitterUtils.getInstance().isLogged()){
         return doOnLoggedInstance(view);
 
@@ -38,10 +36,11 @@ public Bitmap createIcon(){
         User user = null;
         try {
             user = getUser();
+            return tryGetBitmapByPicassa(view, user);
         } catch (TwitterException e) {
             return BitmapFactory.decodeResource(view.getResources(), R.drawable.zabka);
         }
-        return tryGetBitmapByPicassa(view, user);
+
     }
 
     private Bitmap tryGetBitmapByPicassa(View view, User user) {
@@ -53,19 +52,34 @@ public Bitmap createIcon(){
     }
 
     private Bitmap getBitmap(View view, User user) throws IOException {
-        Bitmap bitmap= Picasso.with(view.getContext())
+        final Bitmap[] bitmap123 = new Bitmap[1];
+        com.squareup.picasso.Target target=new com.squareup.picasso.Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                bitmap123[0] =bitmap;
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+
+        Picasso.with(view.getContext())
                 .load(user.getProfileImageURL())
-                .get();
-        return bitmap;
+                .into(target);
+        return bitmap123[0];
     }
 
     private User getUser() throws TwitterException {
-        Twitter twitter= TwitterUtils.getInstance().getTwitter();
-        return twitter.showUser(twitter.getScreenName());
+
+        return TwitterUtils.getInstance().getUser() ;
     }
 
-    @Override
-    public void update(Observable observable, Object data) {
-        createIcon();
-    }
+
 }

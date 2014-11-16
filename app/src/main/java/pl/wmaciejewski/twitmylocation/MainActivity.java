@@ -1,15 +1,22 @@
 package pl.wmaciejewski.twitmylocation;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.ErrorDialogFragment;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -29,16 +36,21 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     private MapPanel mapPanel;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpMapIfNeeded();
+        if(servicesConnected());
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
         twitterPanel=new TwitterPanel((LinearLayout)findViewById(R.id.tweetingPanel),prefs);
         twitterPanel.setOnTwittListener(this);
         mapPanel=new MapPanel(findViewById(R.id.mapPanel),mMap);
+
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -64,12 +76,12 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
 
 
 
-
     private void setUpMapIfNeeded() {
         if (mMap == null) {
             mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapFragment))
                     .getMap();
 
+            mMap.setMyLocationEnabled(true);
         }
     }
 
@@ -120,6 +132,20 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         e.commit();
     }
 
+
+    private boolean servicesConnected() {
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
+
+        // Showing status
+        if(status!=ConnectionResult.SUCCESS){ // Google Play Services are not available
+
+            int requestCode = 10;
+            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, this, requestCode);
+            dialog.show();
+            return false;
+
+        }else return true;
+    }
 
 
 }
