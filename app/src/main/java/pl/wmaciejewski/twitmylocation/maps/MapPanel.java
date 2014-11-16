@@ -44,8 +44,8 @@ public class MapPanel implements Observer {
         mMap = map;
         getLocation = new GetLocation((LocationManager) view.getContext().getSystemService(Context.LOCATION_SERVICE));
         getLocation.addObserver(this);
-        markerBuilder = new MarkerBuilder();
-        markerBuilder.setMarkerBitmap(new CreateMarkerIcon().createIcon(view));
+        markerBuilder = new MarkerBuilder(view);
+
     }
 
     public Location getCurrentLocation() {
@@ -55,7 +55,7 @@ public class MapPanel implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         if(observable instanceof TwitterUtils){
-            markerBuilder.setMarkerBitmap(new CreateMarkerIcon().createIcon(view));
+            markerBuilder.updateUser(((TwitterUtils) observable).getUser());
         }else {
             currentLocation = (Location) o;
             setUpMap(currentLocation);

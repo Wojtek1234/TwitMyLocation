@@ -24,7 +24,7 @@ public class TwitterUtils extends Observable{
     private static TwitterUtils instance;
     private String token, secret;
     private AccessToken accessToken;
-    private User user;
+    private TwitterUser user;
 
 
 
@@ -65,7 +65,7 @@ public class TwitterUtils extends Observable{
 
     }
 
-    public User getUser() {
+    public TwitterUser getUser() {
         return user;
     }
 
@@ -116,10 +116,11 @@ public class TwitterUtils extends Observable{
 
             try {
                 twitter.getAccountSettings();
-                user=twitter.showUser(twitter.getId());
+                user=new TwitterUser(twitter.showUser(twitter.getId()));
                 return twitter;
             } catch (TwitterException e) {
                 failed=true;
+                user=new TwitterUser();
                 return getBrandNewTwitter();
             }
         }
