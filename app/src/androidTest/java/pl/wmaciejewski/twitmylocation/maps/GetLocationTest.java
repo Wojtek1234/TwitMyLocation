@@ -13,12 +13,13 @@ public class GetLocationTest extends AndroidTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        context= new RenamingDelegatingContext(getContext(), "test_");
+        context=getContext();
 
         mock = new MockLocationProvider(LocationManager.GPS_PROVIDER, context);
     }
     public void testCurrentLocation() {
-        GetLocation getLocation = new GetLocation((LocationManager)context.getSystemService(context.LOCATION_SERVICE));
+        //TODO create good location test....
+        getLocation = new GetLocation((LocationManager)context.getSystemService(context.LOCATION_SERVICE));
         mock.pushLocation(52.218887, 21.024797);
 
 

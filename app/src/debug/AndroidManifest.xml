@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="pl.wmaciejewski.twitmylocation"
+        android:label="your tests label" />
+    <uses-library android:name="android.test.runner" />
+
 </manifest>

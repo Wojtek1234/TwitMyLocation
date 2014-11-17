@@ -111,8 +111,7 @@ public class TwitterUtils extends Observable{
          boolean failed=false;
         @Override
         protected Twitter doInBackground(AccessToken... params) {
-            Twitter twitter = new TwitterFactory().getInstance();
-            twitter.setOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
+            Twitter twitter = getBrandNewTwitter();
             twitter.setOAuthAccessToken(params[0]);
             try {
                 twitter.getAccountSettings();

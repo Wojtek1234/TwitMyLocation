@@ -2,8 +2,10 @@ package pl.wmaciejewski.twitmylocation;
 
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,7 +38,17 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         activity.finish();
         super.tearDown();
+
+
     }
+    private void clearCredentials() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        final SharedPreferences.Editor edit = prefs.edit();
+        edit.remove(MainActivity.PREF_KEY_OAUTH_TOKEN);
+        edit.remove(MainActivity.PREF_KEY_OAUTH_SECRET);
+        edit.commit();
+    }
+
 
     public void testUI(){
         View mapFragment=activity.findViewById(R.id.mapFragment);
@@ -59,7 +71,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
 
-/*    public void testInterfaceFunction(){
+    public void testInterfaceFunction(){
         Intent intent= new Intent(activity, RequestTokenActivity.class);
         Instrumentation.ActivityMonitor am = getInstrumentation().addMonitor(RequestTokenActivity.class.getName(), null, false);
         activity.onLogingDemand(intent);
@@ -71,7 +83,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         getInstrumentation().removeMonitor(am);
 
 
-    }*/
+    }
 
 
 

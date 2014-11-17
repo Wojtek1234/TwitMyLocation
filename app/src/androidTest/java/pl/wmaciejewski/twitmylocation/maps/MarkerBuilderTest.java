@@ -25,45 +25,35 @@ public class MarkerBuilderTest extends AndroidTestCase {
     public void setUp() throws Exception {
         super.setUp();
         context= getContext();
-        logginUser(PreferenceManager.getDefaultSharedPreferences(context));
 
-        while(!TwitterUtils.getInstance().isLogged()) {
-            Thread.sleep(1000);
-        }
         LayoutInflater aboutInflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view=aboutInflater.inflate(R.layout.map_layout,null);
         markerBuilder=new MarkerBuilder(view.findViewById(R.id.mapPanel));
-        markerBuilder.updateUser(TwitterUtils.getInstance().getUser());
+
         mock = new MockLocationProvider(LocationManager.GPS_PROVIDER, context);
         mock.pushLocation(52.218887, 21.024797);
     }
 
 
-    public void testMarkerBuildLoggin(){
+    public void testMarkerBuildLoggin() throws InterruptedException {
+        logginUser(PreferenceManager.getDefaultSharedPreferences(context));
+
+        while(!TwitterUtils.getInstance().isLogged()) {
+            Thread.sleep(1000);
+        }
+       markerBuilder.updateUser(TwitterUtils.getInstance().getUser());
        MarkerOptions markerOptions=markerBuilder.createMarker(mock.getMockLocation());
        assertEquals(markerOptions.getPosition().latitude ,mock.getMockLocation().getLatitude());
        assertEquals(markerOptions.getPosition().longitude,mock.getMockLocation().getLongitude());
        assertEquals(markerOptions.getTitle(),TwitterUtils.getInstance().getUser().getName());
     }
 
-    public void testMarkerBuildLogOut() throws InterruptedException {
-        clearCredentials();
-        TwitterUtils.getInstance().authenticat(PreferenceManager.getDefaultSharedPreferences(context));
-        while(TwitterUtils.getInstance().isLogged()) {
-            Thread.sleep(1000);
-        }
-        MarkerOptions markerOptions=markerBuilder.createMarker(mock.getMockLocation());
-        assertEquals(markerOptions.getPosition().latitude ,mock.getMockLocation().getLatitude());
-        assertEquals(markerOptions.getPosition().longitude,mock.getMockLocation().getLongitude());
-        assertEquals(markerOptions.getTitle(),TwitterUtils.getInstance().getUser().getName());
-        Bitmap bitmap= BitmapFactory.decodeResource(context.getResources(), R.drawable.zabka);
-        assertEquals(markerOptions.getIcon(), BitmapDescriptorFactory.fromBitmap(bitmap));
 
-    }
 
 
     public void tearDown() throws Exception {
         mock.shutdown();
+        clearCredentials();
     }
 
 
@@ -86,6 +76,7 @@ public class MarkerBuilderTest extends AndroidTestCase {
         SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(context).edit();
         e.putString(MainActivity.PREF_KEY_OAUTH_TOKEN, LOGGED_USER_TOKEN);
         e.putString(MainActivity.PREF_KEY_OAUTH_SECRET, LOGGED_USER_SECRET);
+        e.commit();
         TwitterUtils twitterUtils= TwitterUtils.getInstance();
         twitterUtils.authenticat(prefs);
 
