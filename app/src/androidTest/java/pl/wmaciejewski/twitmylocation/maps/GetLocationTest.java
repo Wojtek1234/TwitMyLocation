@@ -18,9 +18,9 @@ public class GetLocationTest extends AndroidTestCase {
         mock = new MockLocationProvider(LocationManager.GPS_PROVIDER, context);
     }
     public void testCurrentLocation() {
-
-        mock.pushLocation(52.218887, 21.024797);
         GetLocation getLocation = new GetLocation((LocationManager)context.getSystemService(context.LOCATION_SERVICE));
+        mock.pushLocation(52.218887, 21.024797);
+
 
         assertEquals(mock.getMockLocation().getLongitude(), getLocation.getLastKnowLocation().getLongitude());
         assertEquals(mock.getMockLocation().getLatitude(), getLocation.getLastKnowLocation().getLatitude());

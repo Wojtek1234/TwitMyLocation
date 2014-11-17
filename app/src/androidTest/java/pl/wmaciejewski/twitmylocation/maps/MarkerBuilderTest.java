@@ -2,12 +2,15 @@ package pl.wmaciejewski.twitmylocation.maps;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.preference.PreferenceManager;
 import android.test.AndroidTestCase;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.wmaciejewski.twitmylocation.MainActivity;
@@ -36,12 +39,28 @@ public class MarkerBuilderTest extends AndroidTestCase {
     }
 
 
-    public void testMarkerBild(){
+    public void testMarkerBuildLoggin(){
        MarkerOptions markerOptions=markerBuilder.createMarker(mock.getMockLocation());
        assertEquals(markerOptions.getPosition().latitude ,mock.getMockLocation().getLatitude());
        assertEquals(markerOptions.getPosition().longitude,mock.getMockLocation().getLongitude());
        assertEquals(markerOptions.getTitle(),TwitterUtils.getInstance().getUser().getName());
     }
+
+    public void testMarkerBuildLogOut() throws InterruptedException {
+        clearCredentials();
+        TwitterUtils.getInstance().authenticat(PreferenceManager.getDefaultSharedPreferences(context));
+        while(TwitterUtils.getInstance().isLogged()) {
+            Thread.sleep(1000);
+        }
+        MarkerOptions markerOptions=markerBuilder.createMarker(mock.getMockLocation());
+        assertEquals(markerOptions.getPosition().latitude ,mock.getMockLocation().getLatitude());
+        assertEquals(markerOptions.getPosition().longitude,mock.getMockLocation().getLongitude());
+        assertEquals(markerOptions.getTitle(),TwitterUtils.getInstance().getUser().getName());
+        Bitmap bitmap= BitmapFactory.decodeResource(context.getResources(), R.drawable.zabka);
+        assertEquals(markerOptions.getIcon(), BitmapDescriptorFactory.fromBitmap(bitmap));
+
+    }
+
 
     public void tearDown() throws Exception {
         mock.shutdown();
@@ -49,7 +68,13 @@ public class MarkerBuilderTest extends AndroidTestCase {
 
 
 
-
+    private void clearCredentials() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final SharedPreferences.Editor edit = prefs.edit();
+        edit.remove(MainActivity.PREF_KEY_OAUTH_TOKEN);
+        edit.remove(MainActivity.PREF_KEY_OAUTH_SECRET);
+        edit.commit();
+    }
 
 
 

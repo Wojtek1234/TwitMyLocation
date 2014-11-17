@@ -49,6 +49,7 @@ public class MarkerBuilder {
     public void updateUser(TwitterUser user) {
         markerTitle = user.getName();
         if(user.getPhoto()!=null) new LoadPhoto().execute(user.getPhoto());
+        else  setMarkerBitmap( BitmapFactory.decodeResource(view.getResources(), R.drawable.zabka));
 
 
 
