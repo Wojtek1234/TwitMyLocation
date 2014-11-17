@@ -1,6 +1,5 @@
 package pl.wmaciejewski.twitmylocation.maps;
 
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -12,7 +11,7 @@ import java.util.Observable;
  */
 public class GetLocation extends Observable {
     private LocationManager locationManager;
-    private HereLocationListener locationListener;
+    private HereLocationListener hereLocationListener;
 
 
 
@@ -23,8 +22,13 @@ public class GetLocation extends Observable {
 
         this.locationManager= locationManager;
         String provider = locationManager.GPS_PROVIDER;
-        lastKnowLocation=locationManager.getLastKnownLocation(provider);
+        hereLocationListener=new HereLocationListener();
+        updateLastKnowLocation(locationManager.getLastKnownLocation(provider));
         this.locationManager.requestLocationUpdates(provider,5,10,new HereLocationListener() );
+    }
+
+    public void getSinglePosition(){
+        this.locationManager.requestSingleUpdate(locationManager.GPS_PROVIDER,hereLocationListener,null);
     }
 
 

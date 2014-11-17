@@ -9,9 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-
 import pl.wmaciejewski.twitmylocation.R;
-
 public class TwiiterPanelTest extends AndroidTestCase {
 
     private Context context;
@@ -88,15 +86,7 @@ public class TwiiterPanelTest extends AndroidTestCase {
 
 
 
-    private void logginUser(SharedPreferences prefs) {
-        final String LOGGED_USER_TOKEN = "2869153881-AaWTaeQHKvPBBGBp51l9UTmFmeSiPf6dtOTXWQX";
-        final String LOGGED_USER_SECRET = "7bonzofF0HaSc5IwXGIzDXD1azovpQBWCuax15Vyl4qDZ";
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        TwitterUtils twitterUtils= TwitterUtils.getInstance();
-        twitterUtils.authenticat(prefs);
-
-    }
 
     private class MockInterface implements TwitterPanel.TwitterListener{
 

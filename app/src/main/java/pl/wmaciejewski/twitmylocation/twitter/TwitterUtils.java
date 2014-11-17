@@ -13,7 +13,6 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.User;
 import twitter4j.auth.AccessToken;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
@@ -62,6 +61,8 @@ public class TwitterUtils extends Observable{
             this.twitter=twitter;
             setChanged();
             notifyObservers();
+
+            //TODO change observer to BUS provider
 
     }
 
@@ -113,7 +114,6 @@ public class TwitterUtils extends Observable{
             Twitter twitter = new TwitterFactory().getInstance();
             twitter.setOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
             twitter.setOAuthAccessToken(params[0]);
-
             try {
                 twitter.getAccountSettings();
                 user=new TwitterUser(twitter.showUser(twitter.getId()));
@@ -124,10 +124,6 @@ public class TwitterUtils extends Observable{
                 return getBrandNewTwitter();
             }
         }
-
-
-
-
         @Override
         protected void onPostExecute(Twitter twitter) {
             setUpTwitter(twitter,failed);

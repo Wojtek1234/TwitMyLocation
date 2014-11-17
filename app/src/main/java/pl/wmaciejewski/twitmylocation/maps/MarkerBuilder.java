@@ -9,12 +9,10 @@ import android.view.View;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.net.URI;
 
 import pl.wmaciejewski.twitmylocation.R;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterUser;
@@ -28,33 +26,43 @@ public class MarkerBuilder {
     private String markerTitle;
     private TwitterUser twitterUser;
 
-    public MarkerBuilder(View view){
-        this.view=view;
-    }
-    private void setMarkerBitmap(Bitmap bitmap){
-        markerBitmap=BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
-    public void setMarkerTitle(String title){
-        this.markerTitle=title;
+    public MarkerBuilder(View view) {
+        this.view = view;
+        markerTitle="anonymus";
+        setMarkerBitmap( BitmapFactory.decodeResource(view.getResources(), R.drawable.zabka));
     }
 
-    public MarkerOptions createMarker(Location loc){
-       return new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude())).title(markerTitle).icon(markerBitmap);
+    private void setMarkerBitmap(Bitmap bitmap) {
+        markerBitmap = BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+
+    public void setMarkerTitle(String title) {
+        this.markerTitle = title;
+    }
+
+
+    public MarkerOptions createMarker(Location loc) {
+        return new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude())).title(markerTitle).icon(markerBitmap);
     }
 
     public void updateUser(TwitterUser user) {
-        markerTitle=user.getName();
-        new LoadPhoto().execute(user.getPhoto());
+        markerTitle = user.getName();
+        if(user.getPhoto()!=null) new LoadPhoto().execute(user.getPhoto());
+
+
 
     }
 
 
-    private class LoadPhoto extends AsyncTask<String,Void,Bitmap>{
+    private class LoadPhoto extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... params) {
             try {
                 return Picasso.with(view.getContext()).load(params[0]).get();
             } catch (IOException e) {
+                return BitmapFactory.decodeResource(view.getResources(), R.drawable.zabka);
+            }catch(IllegalArgumentException ie){
                 return BitmapFactory.decodeResource(view.getResources(), R.drawable.zabka);
             }
         }
@@ -64,4 +72,6 @@ public class MarkerBuilder {
             setMarkerBitmap(bitmap);
         }
     }
+
+
 }

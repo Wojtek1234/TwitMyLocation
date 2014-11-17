@@ -1,25 +1,21 @@
 package pl.wmaciejewski.twitmylocation;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.ErrorDialogFragment;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
 
 import pl.wmaciejewski.twitmylocation.maps.MapPanel;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterPanel;
@@ -42,7 +38,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpMapIfNeeded();
-        if(servicesConnected());
+        checkLocationSettings();
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
         twitterPanel=new TwitterPanel((LinearLayout)findViewById(R.id.tweetingPanel),prefs);
         twitterPanel.setOnTwittListener(this);
@@ -50,6 +46,12 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
 
     }
 
+    private void checkLocationSettings() {
+        LocationManager locationManager = (LocationManager) this
+                .getSystemService(LOCATION_SERVICE);
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) showSettingsAlert();
+        if(!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) showSettingsAlert();
+    }
 
 
     @Override
@@ -71,21 +73,13 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
             default:
                return super.onMenuItemSelected(featureId, item);
         }
-
     }
-
-
 
     private void setUpMapIfNeeded() {
-        if (mMap == null) {
-            mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapFragment))
+        if (mMap == null)  mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapFragment))
                     .getMap();
-
-            mMap.setMyLocationEnabled(true);
-        }
+        mMap.setMyLocationEnabled(true);
     }
-
-
 
     @Override
     public void onLogingDemand(Intent loggingIntent) {
@@ -97,7 +91,6 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==REQUEST_LOGIN){
             if(resultCode==RESULT_CODE_LOGGED){
-
                 this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 saveTwitterInfo(data);
                 twitterPanel.login(this.prefs);
@@ -132,19 +125,22 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         e.commit();
     }
 
-
-    private boolean servicesConnected() {
-        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
-
-        // Showing status
-        if(status!=ConnectionResult.SUCCESS){ // Google Play Services are not available
-
-            int requestCode = 10;
-            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, this, requestCode);
-            dialog.show();
-            return false;
-
-        }else return true;
+    public void showSettingsAlert(){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Location warning");
+        alertDialog.setMessage(getResources().getString(R.string.gsr_not_enable));
+        alertDialog.setPositiveButton(getResources().getString(R.string.go_to_setting), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        });
+        alertDialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        alertDialog.show();
     }
 
 
