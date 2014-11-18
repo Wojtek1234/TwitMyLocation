@@ -1,15 +1,20 @@
 package pl.wmaciejewski.twitmylocation.twitter;
 
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.AsyncTask;
 
 import java.util.List;
 import java.util.Observable;
 
 import pl.wmaciejewski.twitmylocation.MainActivity;
+import pl.wmaciejewski.twitmylocation.bus.BusProvider;
+import pl.wmaciejewski.twitmylocation.bus.ListOfStatusEvent;
+import twitter4j.GeoLocation;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -74,19 +79,20 @@ public class TwitterUtils extends Observable{
     public void sendTweet(String msg) throws TwitterException {
         twitter.updateStatus(msg);
     }
+    public void sendTweetWithLocation(String msg,Location loc) throws TwitterException {
+        twitter.updateStatus(new StatusUpdate(msg).location(new GeoLocation(loc.getLatitude(),loc.getLongitude())));
+    }
 
-    public List<Status> getTwitterStatusList(String searchHashTag) throws TwitterException {
-
+    private List<Status> getTwitterStatusList(String searchHashTag) throws TwitterException {
+        searchHashTag=searchHashTag.replace('#', ' ');
         Query query = new Query(searchHashTag);
         QueryResult twitResult = requestTwittersQuery(query);
         return twitResult.getTweets();
-
     }
 
     private QueryResult requestTwittersQuery(Query query) throws TwitterException {
         QueryResult result = twitter.search(query);
         return result;
-
     }
 
     public boolean isLogged() {
@@ -104,6 +110,15 @@ public class TwitterUtils extends Observable{
         Configuration configuration = configurationBuilder.build();
 
         return new TwitterFactory(configuration).getInstance();
+    }
+
+    private void presentListOfStatuses(List<Status> statuses) {
+        BusProvider.getInstance().post(new ListOfStatusEvent(statuses));
+    }
+
+    public void getListHashTags(String string) {
+        GetTwitterStatusesList getTwitterStatusesList=new GetTwitterStatusesList();
+        getTwitterStatusesList.execute(string);
     }
 
 
@@ -128,4 +143,22 @@ public class TwitterUtils extends Observable{
             setUpTwitter(twitter,failed);
         }
     }
+
+    private class  GetTwitterStatusesList extends AsyncTask<String,Void,List<Status>>{
+        @Override
+        protected List<twitter4j.Status> doInBackground(String... strings) {
+            try {
+                return getTwitterStatusList(strings[0]);
+            } catch (TwitterException e) {
+                e.printStackTrace();
+                return  null;
+            }
+        }
+        @Override
+        protected void onPostExecute(List<twitter4j.Status> statuses) {
+            presentListOfStatuses(statuses);
+        }
+    }
+
+
 }

@@ -2,15 +2,13 @@ package pl.wmaciejewski.twitmylocation.maps;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.preference.PreferenceManager;
 import android.test.AndroidTestCase;
+import android.test.RenamingDelegatingContext;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import pl.wmaciejewski.twitmylocation.MainActivity;
@@ -24,7 +22,7 @@ public class MarkerBuilderTest extends AndroidTestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-        context= getContext();
+        context= new RenamingDelegatingContext(getContext(), "test_marker_build");;
 
         LayoutInflater aboutInflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view=aboutInflater.inflate(R.layout.map_layout,null);

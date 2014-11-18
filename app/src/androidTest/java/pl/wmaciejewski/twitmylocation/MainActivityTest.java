@@ -3,8 +3,6 @@ package pl.wmaciejewski.twitmylocation;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
@@ -29,14 +27,15 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        activity = getActivity();
-
+        activity =getActivity();
+        this.setActivityInitialTouchMode(true);
     }
 
     @Override
     protected void tearDown() throws Exception {
 
         activity.finish();
+        setActivity(null);
         super.tearDown();
 
 

@@ -4,29 +4,38 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.test.AndroidTestCase;
+import android.test.RenamingDelegatingContext;
 import android.test.UiThreadTest;
 
+import com.squareup.otto.Subscribe;
 
-
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import pl.wmaciejewski.twitmylocation.MainActivity;
-import twitter4j.Twitter;
+import pl.wmaciejewski.twitmylocation.R;
+import pl.wmaciejewski.twitmylocation.bus.BusProvider;
+import pl.wmaciejewski.twitmylocation.bus.ListOfStatusEvent;
+import twitter4j.Status;
 
 public class TwitterUtilsTest extends AndroidTestCase implements Observer {
-    Context context=getContext();
-    CountDownLatch signal;
+    private static final String TEST_TWIT=" TEST_TWIT";
+    Context context;
+    CountDownLatch signal,signal2;
+    private List<Status> statuses;
     TwitterUtils twitterUtils= TwitterUtils.getInstance();
     public void setUp() throws Exception {
-
+        BusProvider.getInstance().register(this);
         twitterUtils.deleteObservers();
-        context=getContext();
+        context=new RenamingDelegatingContext(getContext(), "test_Utils_");;
         twitterUtils.addObserver(this);
         super.setUp();
         signal = new CountDownLatch(1);
+        signal2= new CountDownLatch(1);
         logginUser();
 
 
@@ -44,15 +53,23 @@ public class TwitterUtilsTest extends AndroidTestCase implements Observer {
         clearCredentials();
     }
 
-
-
-    public void testSendTweet() throws Exception {
-
-    }
-
+    @UiThreadTest
     public void testGetTwitterStatusList() throws Exception {
-
+        Random r = new Random();
+        char c = (char)(r.nextInt(26) + 'a');
+        String hastag=context.getResources().getString(R.string.programHashTag)+c;
+        twitterUtils.sendTweet(hastag+TEST_TWIT);
+        Thread.sleep(15000);
+        twitterUtils.getListHashTags(hastag);
+        signal2.await(30, TimeUnit.SECONDS);
+        assertTrue(statuses.size()==1);
+        assertEquals(statuses.get(0).getText(),hastag+TEST_TWIT);
+        twitterUtils.getTwitter().destroyStatus(statuses.get(0).getId());
     }
+
+
+
+
 
 
 
@@ -77,6 +94,13 @@ public class TwitterUtilsTest extends AndroidTestCase implements Observer {
         e.putString(MainActivity.PREF_KEY_OAUTH_TOKEN, LOGGED_USER_TOKEN);
         e.putString(MainActivity.PREF_KEY_OAUTH_SECRET, LOGGED_USER_SECRET);
         e.commit();
+
+    }
+
+    @Subscribe
+    public void answerAvailable(ListOfStatusEvent event) {
+        statuses=event.getStatusList();
+        signal2.countDown();
 
     }
 

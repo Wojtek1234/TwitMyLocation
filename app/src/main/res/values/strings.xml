@@ -14,5 +14,6 @@
     <string name="gsr_not_enable">Location services are not enable. \n Do you want to turn it on?</string>
     <string name="go_to_setting">Turn gps on</string>
     <string name="cancel">Cancel</string>
+    <string name="programHashTag">#TwitMyLocation</string>
 
 </resources>
