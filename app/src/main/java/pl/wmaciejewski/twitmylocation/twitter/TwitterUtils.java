@@ -5,7 +5,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 
 import java.util.List;
-import java.util.Observable;
 
 import pl.wmaciejewski.twitmylocation.MainActivity;
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
@@ -23,7 +22,7 @@ import twitter4j.auth.AccessToken;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class TwitterUtils extends Observable{
+public class TwitterUtils {
 
 
     private static TwitterUtils instance;
@@ -65,8 +64,7 @@ public class TwitterUtils extends Observable{
     private void setUpTwitter(Twitter twitter, boolean failed){
             logged=!failed;
             this.twitter=twitter;
-            setChanged();
-            notifyObservers();
+
 
             //TODO change observer to BUS provider
             BusProvider.getInstance().post(new MessageLogin(logged,user));

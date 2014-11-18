@@ -19,7 +19,6 @@ import java.util.Observer;
 
 import pl.wmaciejewski.twitmylocation.R;
 import pl.wmaciejewski.twitmylocation.bus.MessageLogin;
-import pl.wmaciejewski.twitmylocation.twitter.TwitterUtils;
 
 /**
  * Created by w.maciejewski on 2014-11-13.
@@ -34,7 +33,6 @@ public class MapPanel implements Observer {
     private Marker lastMarker;
 
     public MapPanel(View view, GoogleMap map) {
-        TwitterUtils.getInstance().addObserver(this);
         this.view = view;
         mMap = map;
         getLocation = new GetLocation((LocationManager)view.getContext().getSystemService(view.getContext().LOCATION_SERVICE));
@@ -49,16 +47,14 @@ public class MapPanel implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        if (observable instanceof TwitterUtils) {
 
-        } else {
             currentLocation = (Location)o;
             setUpMap(currentLocation);
-        }
+
     }
 
     @Subscribe
-    private void answerComing(MessageLogin event){
+    public void answerComing(MessageLogin event){
         markerBuilder.updateUser(event.getTwitterUser());
         getLocation.getSinglePosition();
     }

@@ -7,28 +7,18 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:layout_gravity="center"/>
+    <include layout="@layout/twiting_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="left"/>
 
-    <LinearLayout
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        xmlns:android="http://schemas.android.com/apk/res/android" >
-
-
-        <include layout="@layout/twiting_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_gravity="center"/>
-        <include layout="@layout/map_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_alignParentLeft="true"
-            />
-
-
-    </LinearLayout>
+    <include layout="@layout/map_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_alignParentLeft="true"
+        />
     </FrameLayout>
 
 

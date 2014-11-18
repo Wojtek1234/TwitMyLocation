@@ -8,16 +8,13 @@ import android.widget.LinearLayout;
 
 import com.squareup.otto.Subscribe;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import pl.wmaciejewski.twitmylocation.R;
 import pl.wmaciejewski.twitmylocation.bus.MessageLogin;
 
 /**
  * Created by w.maciejewski on 2014-11-13.
  */
-public class TwitterPanel implements Observer {
+public class TwitterPanel  {
     private Button logginButton,findHashTagButton,tweetLocationButton;
     private TwitterUtils twitterUtils=TwitterUtils.getInstance();
     private TwitterListener twitterListener;
@@ -26,12 +23,11 @@ public class TwitterPanel implements Observer {
 
 
     public TwitterPanel(LinearLayout view, SharedPreferences prefs){
-        twitterUtils.deleteObservers();
         login(prefs);
         logginButton=(Button)view.findViewById(R.id.loginTwitButton);
         logginButton.setEnabled(false);
         logginButton.setOnClickListener(new LoginButOnClick());
-        twitterUtils.addObserver(this);
+        //twitterUtils.addObserver(this);
         this.view=view;
 
     }
@@ -61,11 +57,11 @@ public class TwitterPanel implements Observer {
             twitterUtils.authenticat(prefs);
     }
 
-    @Override
+  /*  @Override
     public void update(Observable observable, Object data) {
         logginButton.setEnabled(true);
         setLoginButtonText(view);
-    }
+    }*/
 
     @Subscribe
     public void answerAvailable(MessageLogin event) {
