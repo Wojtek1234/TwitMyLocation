@@ -6,16 +6,13 @@ import android.preference.PreferenceManager;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 import android.test.UiThreadTest;
-
 import com.squareup.otto.Subscribe;
-
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
 import pl.wmaciejewski.twitmylocation.MainActivity;
 import pl.wmaciejewski.twitmylocation.R;
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
@@ -40,7 +37,6 @@ public class TwitterUtilsTest extends AndroidTestCase implements Observer {
 
 
     }
-
     /* Run only as separate test */
     @UiThreadTest
     public void testAuthenticat() throws Exception {
@@ -66,13 +62,6 @@ public class TwitterUtilsTest extends AndroidTestCase implements Observer {
         assertEquals(statuses.get(0).getText(),hastag+TEST_TWIT);
         twitterUtils.getTwitter().destroyStatus(statuses.get(0).getId());
     }
-
-
-
-
-
-
-
 
 
     private void clearCredentials() {

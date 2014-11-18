@@ -10,6 +10,7 @@ import java.util.Observable;
 import pl.wmaciejewski.twitmylocation.MainActivity;
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
 import pl.wmaciejewski.twitmylocation.bus.ListOfStatusEvent;
+import pl.wmaciejewski.twitmylocation.bus.MessageLogin;
 import twitter4j.GeoLocation;
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -68,6 +69,7 @@ public class TwitterUtils extends Observable{
             notifyObservers();
 
             //TODO change observer to BUS provider
+            BusProvider.getInstance().post(new MessageLogin(logged,user));
 
     }
 

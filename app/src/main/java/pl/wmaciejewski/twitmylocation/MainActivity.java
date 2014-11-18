@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 
+import pl.wmaciejewski.twitmylocation.bus.BusProvider;
 import pl.wmaciejewski.twitmylocation.maps.MapPanel;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterPanel;
 
@@ -43,7 +44,16 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         twitterPanel=new TwitterPanel((LinearLayout)findViewById(R.id.tweetingPanel),prefs);
         twitterPanel.setOnTwittListener(this);
         mapPanel=new MapPanel(findViewById(R.id.mapPanel),mMap);
+        BusProvider.getInstance().register(mapPanel);
+        BusProvider.getInstance().register(twitterPanel);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        BusProvider.getInstance().unregister(mapPanel);
+        BusProvider.getInstance().unregister(twitterPanel);
+        super.onDestroy();
     }
 
     private void checkLocationSettings() {

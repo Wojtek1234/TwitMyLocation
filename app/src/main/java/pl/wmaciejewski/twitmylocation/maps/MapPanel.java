@@ -11,12 +11,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import pl.wmaciejewski.twitmylocation.R;
+import pl.wmaciejewski.twitmylocation.bus.MessageLogin;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterUtils;
 
 /**
@@ -48,13 +50,20 @@ public class MapPanel implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         if (observable instanceof TwitterUtils) {
-            markerBuilder.updateUser(((TwitterUtils) observable).getUser());
-            getLocation.getSinglePosition();
+
         } else {
             currentLocation = (Location)o;
             setUpMap(currentLocation);
         }
     }
+
+    @Subscribe
+    private void answerComing(MessageLogin event){
+        markerBuilder.updateUser(event.getTwitterUser());
+        getLocation.getSinglePosition();
+    }
+
+
     public void showPanel() {
         if (this.view.getVisibility() == View.GONE) this.view.setVisibility(View.VISIBLE);
         else this.view.setVisibility(View.GONE);
