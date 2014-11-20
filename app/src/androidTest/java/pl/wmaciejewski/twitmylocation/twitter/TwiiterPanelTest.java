@@ -9,7 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pl.wmaciejewski.twitmylocation.R;
+import pl.wmaciejewski.twitmylocation.bus.ListOfStatusEvent;
+import twitter4j.Status;
+import twitter4j.Twitter;
+
 public class TwiiterPanelTest extends AndroidTestCase {
 
     private Context context;
@@ -32,30 +39,22 @@ public class TwiiterPanelTest extends AndroidTestCase {
         SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(context);
         ll= (LinearLayout)View.inflate(context, R.layout.twiting_layout,null);
         twitterPanel=new TwitterPanel(ll,prefs);
-    }
-
-    public void testSignUpButton(){
-        Button loginButton=(Button)ll.findViewById(R.id.loginTwitButton);
-        if(!twitterPanel.isLogged()){
-            assertEquals(loginButton.getText().toString(),context.getResources().getString(R.string.loginTwitText));
-        }else{
-            assertEquals(loginButton.getText().toString(),context.getResources().getString(R.string.logoutTwitText));
-        }
 
     }
+
+
 
     public void testLoginClickInterface(){
         Button loginButton=(Button)ll.findViewById(R.id.loginTwitButton);
-        twitterPanel.setOnTwittListener(new MockInterface() );
+        twitterPanel.setOnTwittListener(new MockInterface());
         loginButton.performClick();
         test_name=test_name+"1";
         assertEquals(test_name,test_name2);
     }
 
     public void testHashTagClickInterface(){
-        Button hashTag=(Button)ll.findViewById(R.id.findByHash);
         twitterPanel.setOnTwittListener(new MockInterface() );
-        hashTag.performClick();
+        twitterPanel.answerListStatys(new ListOfStatusEvent(new ArrayList<Status>()));
         test_name=test_name+"1";
         assertEquals(test_name,test_name2);
     }
@@ -101,8 +100,16 @@ public class TwiiterPanelTest extends AndroidTestCase {
         }
 
         @Override
-        public void onFindHashTag(Intent hashTagIntent) {
+        public void onFindHashTag(List<Status> statusList) {
             test_name2=test_name2+"1";
         }
+
+        @Override
+        public void onTwitLocation(Twitter twitter) {
+            test_name2=test_name2+"1";
+
+        }
+
+
     }
 }

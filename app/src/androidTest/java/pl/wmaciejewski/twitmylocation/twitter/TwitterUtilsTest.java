@@ -6,20 +6,22 @@ import android.preference.PreferenceManager;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 import android.test.UiThreadTest;
+
 import com.squareup.otto.Subscribe;
+
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
 import pl.wmaciejewski.twitmylocation.MainActivity;
 import pl.wmaciejewski.twitmylocation.R;
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
 import pl.wmaciejewski.twitmylocation.bus.ListOfStatusEvent;
+import pl.wmaciejewski.twitmylocation.bus.MessageLogin;
 import twitter4j.Status;
 
-public class TwitterUtilsTest extends AndroidTestCase implements Observer {
+public class TwitterUtilsTest extends AndroidTestCase   {
     private static final String TEST_TWIT=" TEST_TWIT";
     Context context;
     CountDownLatch signal,signal2;
@@ -27,9 +29,7 @@ public class TwitterUtilsTest extends AndroidTestCase implements Observer {
     TwitterUtils twitterUtils= TwitterUtils.getInstance();
     public void setUp() throws Exception {
         BusProvider.getInstance().register(this);
-        twitterUtils.deleteObservers();
         context=new RenamingDelegatingContext(getContext(), "test_Utils_");;
-        twitterUtils.addObserver(this);
         super.setUp();
         signal = new CountDownLatch(1);
         signal2= new CountDownLatch(1);
@@ -48,7 +48,7 @@ public class TwitterUtilsTest extends AndroidTestCase implements Observer {
     public void tearDown() throws Exception {
         clearCredentials();
     }
-
+    /* Test pass on debug ...*/
     @UiThreadTest
     public void testGetTwitterStatusList() throws Exception {
         Random r = new Random();
@@ -93,8 +93,8 @@ public class TwitterUtilsTest extends AndroidTestCase implements Observer {
 
     }
 
-    @Override
-    public void update(Observable observable, Object data) {
+    @Subscribe
+    public void answerAvailable2(MessageLogin event) {
         signal.countDown();
     }
 }
