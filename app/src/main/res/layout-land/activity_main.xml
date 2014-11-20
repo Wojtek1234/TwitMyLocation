@@ -10,14 +10,12 @@
     <include layout="@layout/twiting_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_gravity="left"/>
 
     <include layout="@layout/map_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:layout_alignParentLeft="true"
         />
     </FrameLayout>
 

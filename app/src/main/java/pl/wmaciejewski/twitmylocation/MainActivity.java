@@ -17,9 +17,14 @@ import android.widget.LinearLayout;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 
+import java.util.List;
+
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
 import pl.wmaciejewski.twitmylocation.maps.MapPanel;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterPanel;
+import pl.wmaciejewski.twitmylocation.twitter.dialog.FindHashTagDialog;
+import twitter4j.Status;
+import twitter4j.Twitter;
 
 
 public class MainActivity extends FragmentActivity implements TwitterPanel.TwitterListener{
@@ -46,6 +51,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         mapPanel=new MapPanel(findViewById(R.id.mapPanel),mMap);
         BusProvider.getInstance().register(mapPanel);
         BusProvider.getInstance().register(twitterPanel);
+        twitterPanel.setForDialog(new FindHashTagDialog(),getSupportFragmentManager());
 
     }
 
@@ -74,14 +80,11 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()){
-            case R.id.twitAction:
-                twitterPanel.showPanel();
+            case R.id.twitAction:  twitterPanel.showPanel();
                 return true;
-            case R.id.mapAction:
-                mapPanel.showPanel();
+            case R.id.mapAction: mapPanel.showPanel();
                 return true;
-            default:
-               return super.onMenuItemSelected(featureId, item);
+            default: return super.onMenuItemSelected(featureId, item);
         }
     }
 
@@ -115,6 +118,17 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         twitterPanel.login(prefs);
     }
 
+    @Override
+    public void onFindHashTag(List<Status> statusList) {
+
+    }
+
+
+    @Override
+    public void onTwitLocation(Twitter twitter) {
+
+    }
+
     private void clearCredentials() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor edit = prefs.edit();
@@ -122,12 +136,6 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         edit.remove(PREF_KEY_OAUTH_SECRET);
         edit.commit();
     }
-
-    @Override
-    public void onFindHashTag(Intent hashTagIntent) {
-
-    }
-
     private void saveTwitterInfo(Intent intent){
         SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(this).edit();
         e.putString(PREF_KEY_OAUTH_TOKEN, (String) intent.getExtras().get(PREF_KEY_OAUTH_TOKEN));

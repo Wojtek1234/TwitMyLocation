@@ -11,5 +11,10 @@
     <string name="placeMeOnMap">Wskaż gdzie jestem</string>
     <string name="mapMenu">Map</string>
     <string name="twitterMenu">Twitter</string>
+    <string name="placeYourHashTag">Put down what you want to search</string>
+    <string name="find">Look for</string>
+    <string name="cancel">Anuluj</string>
+    <string name="go_to_setting">Włącz GPS</string>
+    <string name="gsr_not_enable">Usługi lokalizacyjne nie sa włączone \n Chcesz je uruchomić?</string>
 
 </resources>

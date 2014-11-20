@@ -15,5 +15,7 @@
     <string name="go_to_setting">Turn gps on</string>
     <string name="cancel">Cancel</string>
     <string name="programHashTag">#TwitMyLocation</string>
+    <string name="placeYourHashTag">Put down what you want to search</string>
+    <string name="find">Look for</string>
 
 </resources>
