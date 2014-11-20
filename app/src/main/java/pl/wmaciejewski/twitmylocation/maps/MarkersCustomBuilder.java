@@ -1,16 +1,18 @@
 package pl.wmaciejewski.twitmylocation.maps;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.View;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.wmaciejewski.twitmylocation.R;
-import pl.wmaciejewski.twitmylocation.twitter.TwitterUser;
+import pl.wmaciejewski.twitmylocation.bus.BusProvider;
+import pl.wmaciejewski.twitmylocation.bus.MarkerOptionsEvent;
 import twitter4j.Status;
 
 /**
@@ -34,25 +36,36 @@ public class MarkersCustomBuilder implements LoadPhoto.GetPhoto{
         new LoadPhoto(this,view).execute(strings);
     }
 
-    public  void  startToCreateTwitterMarker(View view, TwitterUser user) {
-        if(user.getPhoto()!=null) new LoadPhoto(this,view).execute(user.getPhoto());
-        else {
-            this.photo= BitmapFactory.decodeResource(view.getResources(), R.drawable.zabka);
-            View view1=null;
-            getBitmap(this.view);
+
+    private  void  createSetOfMarkers(ArrayList<Bitmap> bitmaps){
+
+        ArrayList<MarkerOptions> markerOptionses=new ArrayList<MarkerOptions>();
+        for(int i=0;i<statusList.size();i++){
+            Status status=statusList.get(i);
+            Bitmap bitmap=bitmaps.get(i);
+            LatLng loc=new LatLng(status.getGeoLocation().getLatitude(),status.getGeoLocation().getLongitude());
+            String title=status.getUser().getName();
+            markerOptionses.add(createMarker(loc,title,bitmap));
         }
+
+        BusProvider.getInstance().post(new MarkerOptionsEvent(markerOptionses));
+
     }
 
-    private  Bitmap getBitmap(View view) {
-        view.setDrawingCacheEnabled(true);
-        view.buildDrawingCache();
-        return view.getDrawingCache();
+
+    private MarkerOptions createMarker(LatLng loc,String title,Bitmap markerBitmap) {
+        return new MarkerOptions().position(loc).title(title).icon(setMarkerBitmap(markerBitmap));
     }
+
+    private BitmapDescriptor setMarkerBitmap(Bitmap bitmap) {
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
 
 
 
     @Override
     public void onGetPhoto(ArrayList<Bitmap> bitmap) {
-
+        createSetOfMarkers(bitmap);
     }
 }
