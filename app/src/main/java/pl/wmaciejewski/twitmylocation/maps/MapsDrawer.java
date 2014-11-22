@@ -64,13 +64,16 @@ public class MapsDrawer implements Observer {
         HashMap<Marker, Status> markerStatusHashMap=new HashMap<Marker, Status>();
         this.markerOptionses=markerOptionses;
         ArrayList<Marker> markers=new ArrayList<Marker>();
+        addMarkersOnHashMap(markerOptionses, markerStatusHashMap, markers);
+        mMap.setOnMarkerClickListener(new MarkerClickListener(markerStatusHashMap));
+        showAllMarkers(markers);
+    }
+
+    private void addMarkersOnHashMap(List<MarkerOptions> markerOptionses, HashMap<Marker, Status> markerStatusHashMap, ArrayList<Marker> markers) {
         for(int i=0;i<markerOptionses.size();i++){
             markers.add(i, mMap.addMarker(markerOptionses.get(i)));
             markerStatusHashMap.put( markers.get(i),statuses.get(i));
-
         }
-        mMap.setOnMarkerClickListener(new MarkerClickListener(markerStatusHashMap));
-        showAllMarkers(markers);
     }
 
 

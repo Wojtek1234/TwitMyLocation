@@ -65,8 +65,6 @@ public class TwitterUtils {
             logged=!failed;
             this.twitter=twitter;
 
-
-            //TODO change observer to BUS provider
             BusProvider.getInstance().post(new MessageLogin(logged,user));
 
     }

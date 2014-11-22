@@ -48,16 +48,15 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
         twitterPanel=new TwitterPanel((LinearLayout)findViewById(R.id.tweetingPanel),prefs);
         twitterPanel.setOnTwittListener(this);
-        mapPanel=new MapPanel(findViewById(R.id.mapPanel),mMap);
         BusProvider.getInstance().register(mapPanel);
         BusProvider.getInstance().register(twitterPanel);
+        mapPanel=new MapPanel(findViewById(R.id.mapPanel),mMap);
         twitterPanel.setForDialog(new FindHashTagDialog(),getSupportFragmentManager());
 
     }
 
     @Override
     protected void onStop() {
-
         super.onStop();
     }
 

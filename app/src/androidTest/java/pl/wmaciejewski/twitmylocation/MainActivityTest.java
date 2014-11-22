@@ -1,11 +1,15 @@
 package pl.wmaciejewski.twitmylocation;
 
+import android.app.Instrumentation;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import pl.wmaciejewski.twitmylocation.twitter.RequestTokenActivity;
 
 /**
  * Created by Wojtek on 2014-11-12.
@@ -66,7 +70,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
 
-   /* public void testInterfaceFunction(){
+    public void testInterfaceFunction(){
         Intent intent= new Intent(activity, RequestTokenActivity.class);
         Instrumentation.ActivityMonitor am = getInstrumentation().addMonitor(RequestTokenActivity.class.getName(), null, false);
         activity.onLogingDemand(intent);
@@ -78,7 +82,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         getInstrumentation().removeMonitor(am);
 
 
-    }*/
+    }
 
 
 

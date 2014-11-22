@@ -24,7 +24,7 @@ public class MarkerBuilder implements LoadPhoto.GetPhoto {
     private final View view;
     private BitmapDescriptor markerBitmap;
     private String markerTitle;
-    private TwitterUser twitterUser;
+
 
     public MarkerBuilder(View view) {
         this.view = view;
