@@ -11,6 +11,7 @@ import com.squareup.otto.Subscribe;
 import java.util.List;
 
 import pl.wmaciejewski.twitmylocation.R;
+import pl.wmaciejewski.twitmylocation.bus.BitmapLoadedEvent;
 import pl.wmaciejewski.twitmylocation.bus.ListOfStatusEvent;
 import pl.wmaciejewski.twitmylocation.bus.MarkerOptionsEvent;
 import pl.wmaciejewski.twitmylocation.bus.MessageLogin;
@@ -31,10 +32,12 @@ public class MapPanel{
 
     public MapPanel(View view, GoogleMap map) {
         this.view = view;
-        getLocation = new GetLocation((LocationManager)view.getContext().getSystemService(view.getContext().LOCATION_SERVICE));
         markerBuilder = new MarkerBuilder(view);
         mapsDrawer=new MapsDrawer(markerBuilder,map);
+        getLocation = new GetLocation((LocationManager)view.getContext().getSystemService(view.getContext().LOCATION_SERVICE));
         getLocation.addObserver(mapsDrawer);
+        getLocation.setMapFirst();
+
         view.findViewById(R.id.findMeMap).setOnClickListener(new FinMeClick());
     }
 
@@ -45,7 +48,7 @@ public class MapPanel{
     @Subscribe
     public void answerComing(MessageLogin event){
         markerBuilder.updateUser(event.getTwitterUser());
-        getLocation.getSinglePosition();
+
     }
 
     @Subscribe
@@ -57,6 +60,11 @@ public class MapPanel{
     @Subscribe
     public void answerSetOfMarkers(MarkerOptionsEvent event){
         mapsDrawer.drawMultipleMarkers(event.getMarkerOptionses());
+    }
+
+    @Subscribe
+    public void answerBitmapGet(BitmapLoadedEvent event){
+        getLocation.getSinglePosition();
     }
 
     @Subscribe

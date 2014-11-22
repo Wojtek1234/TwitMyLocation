@@ -13,6 +13,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 import pl.wmaciejewski.twitmylocation.R;
+import pl.wmaciejewski.twitmylocation.bus.BitmapLoadedEvent;
+import pl.wmaciejewski.twitmylocation.bus.BusProvider;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterUser;
 
 /**
@@ -32,6 +34,7 @@ public class MarkerBuilder implements LoadPhoto.GetPhoto {
 
     private void setMarkerBitmap(Bitmap bitmap) {
         markerBitmap = BitmapDescriptorFactory.fromBitmap(bitmap);
+        BusProvider.getInstance().post(new BitmapLoadedEvent());
     }
 
 

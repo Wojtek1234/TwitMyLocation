@@ -18,16 +18,25 @@ public class GetLocation extends Observable {
     private Location lastKnowLocation;
 
     public GetLocation(LocationManager locationManager){
-
-
         this.locationManager= locationManager;
         String provider = locationManager.GPS_PROVIDER;
         hereLocationListener=new HereLocationListener();
         updateLastKnowLocation(locationManager.getLastKnownLocation(provider));
+        if(lastKnowLocation==null){
+             provider = locationManager.NETWORK_PROVIDER;
+             updateLastKnowLocation(locationManager.getLastKnownLocation(provider));
+        }
+        provider = locationManager.GPS_PROVIDER;
         this.locationManager.requestLocationUpdates(provider,5,10,new HereLocationListener() );
     }
 
+    public void setMapFirst(){
+        if(lastKnowLocation!=null) updateLastKnowLocation(lastKnowLocation);
+
+    }
+
     public void getSinglePosition(){
+        setMapFirst();
         this.locationManager.requestSingleUpdate(locationManager.GPS_PROVIDER,hereLocationListener,null);
     }
 

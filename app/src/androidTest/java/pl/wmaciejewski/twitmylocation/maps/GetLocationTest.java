@@ -3,7 +3,6 @@ package pl.wmaciejewski.twitmylocation.maps;
 import android.content.Context;
 import android.location.LocationManager;
 import android.test.AndroidTestCase;
-import android.test.RenamingDelegatingContext;
 
 public class GetLocationTest extends AndroidTestCase {
     private Context context;
@@ -19,7 +18,7 @@ public class GetLocationTest extends AndroidTestCase {
     }
     public void testCurrentLocation() {
         //TODO create good location test....
-        getLocation = new GetLocation((LocationManager)context.getSystemService(context.LOCATION_SERVICE));
+        getLocation = new GetLocation((LocationManager)context.getSystemService(context.LOCATION_SERVICE), mapsDrawer);
         mock.pushLocation(52.218887, 21.024797);
 
 

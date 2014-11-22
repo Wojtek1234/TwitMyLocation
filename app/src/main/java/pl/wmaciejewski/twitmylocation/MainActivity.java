@@ -57,8 +57,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
 
     @Override
     protected void onStop() {
-        BusProvider.getInstance().unregister(mapPanel);
-        BusProvider.getInstance().unregister(twitterPanel);
+
         super.onStop();
     }
 
