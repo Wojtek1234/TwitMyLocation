@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 
+import java.io.File;
 import java.util.List;
 
 import pl.wmaciejewski.twitmylocation.MainActivity;
@@ -79,6 +80,12 @@ public class TwitterUtils {
     }
     public void sendTweetWithLocation(String msg,Location loc) throws TwitterException {
         twitter.updateStatus(new StatusUpdate(msg).location(new GeoLocation(loc.getLatitude(),loc.getLongitude())));
+    }
+    public void sendTwitWithPhoto(String msg,File file) throws TwitterException {
+
+            StatusUpdate status = new StatusUpdate(msg);
+            status.setMedia(file);
+            twitter.updateStatus(status);
     }
 
     private List<Status> getTwitterStatusList(String searchHashTag) throws TwitterException {
