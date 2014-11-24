@@ -1,6 +1,6 @@
-package pl.wmaciejewski.twitmylocation.twitter.exception;
+package pl.wmaciejewski.twitmylocation.twitter;
 
-import android.location.Location;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
 
@@ -14,31 +14,35 @@ import twitter4j.TwitterException;
  */
 public class SendTwit {
 
-    private final Twitter twitter;
+    private final Twitter twitter=TwitterUtils.getInstance().getTwitter();
 
 
-    public SendTwit(Twitter twitter) {
-        this.twitter = twitter;
+    public SendTwit(){
+
     }
+
 
     public void sendTwit(String msg) throws TwitterException {
         twitter.updateStatus(msg);
     }
-    public void sendTwit(String msg,Location loc) throws TwitterException {
-        twitter.updateStatus(new StatusUpdate(msg).location(new GeoLocation(loc.getLatitude(),loc.getLongitude())));
+    public void sendTwit(String msg,LatLng loc) throws TwitterException {
+        twitter.updateStatus(new StatusUpdate(msg).location(new GeoLocation(loc.latitude,loc.longitude)));
     }
     public void sendTwit(String msg,File file) throws TwitterException {
-
         StatusUpdate status = new StatusUpdate(msg);
         status.setMedia(file);
         twitter.updateStatus(status);
     }
-    public void sendTwit(String msg,File file,Location loc) throws TwitterException {
+    public void sendTwit(String msg,File file,LatLng loc) throws TwitterException {
 
         StatusUpdate status = new StatusUpdate(msg);
         status.setMedia(file);
-        status.location(new GeoLocation(loc.getLatitude(),loc.getLongitude()));
+        status.location(new GeoLocation(loc.latitude,loc.longitude));
         twitter.updateStatus(status);
+    }
+
+    public void retwit(long id) throws TwitterException {
+        twitter.retweetStatus(id);
     }
 
 }

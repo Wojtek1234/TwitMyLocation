@@ -16,5 +16,7 @@
     <string name="cancel">Anuluj</string>
     <string name="go_to_setting">Włącz GPS</string>
     <string name="gsr_not_enable">Usługi lokalizacyjne nie sa włączone \n Chcesz je uruchomić?</string>
+    <string name="pick_image_source">Choose source of image</string>
+    <string name="from_gallery">Take from gallery</string>
 
 </resources>

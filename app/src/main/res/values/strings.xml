@@ -17,5 +17,11 @@
     <string name="programHashTag">#TwitMyLocation</string>
     <string name="placeYourHashTag">Put down what you want to search</string>
     <string name="find">Look for</string>
+    <string name="pick_image_source">Choose source of image</string>
+    <string name="from_gallery">Take from gallery</string>
+    <string name="from_camera">Catch from Camera</string>
+    <string name="title_activity_send_twit">SendTwitActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="no_photo_warn">No photo</string>
 
 </resources>

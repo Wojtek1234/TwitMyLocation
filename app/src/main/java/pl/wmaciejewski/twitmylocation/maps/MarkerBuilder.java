@@ -34,7 +34,7 @@ public class MarkerBuilder implements LoadPhoto.GetPhoto {
 
     private void setMarkerBitmap(Bitmap bitmap) {
         markerBitmap = BitmapDescriptorFactory.fromBitmap(bitmap);
-        BusProvider.getInstance().post(new BitmapLoadedEvent());
+        BusProvider.getInstance().post(new BitmapLoadedEvent(bitmap));
     }
 
 
@@ -57,4 +57,6 @@ public class MarkerBuilder implements LoadPhoto.GetPhoto {
     public void onGetPhoto(ArrayList<Bitmap> bitmap) {
         setMarkerBitmap(bitmap.get(0));
     }
+
+
 }

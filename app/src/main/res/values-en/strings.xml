@@ -17,5 +17,7 @@
     <string name="gsr_not_enable">Location services are not enable. \n Do you want to turn it on?</string>
     <string name="go_to_setting">Turn on GPS</string>
     <string name="programHashTag">#TwitMyLocation</string>
+    <string name="pick_image_source">Choose source of image</string>
+    <string name="from_gallery">Take from gallery</string>
 
 </resources>

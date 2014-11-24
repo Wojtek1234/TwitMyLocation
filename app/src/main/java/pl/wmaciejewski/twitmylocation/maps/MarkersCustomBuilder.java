@@ -43,9 +43,12 @@ public class MarkersCustomBuilder implements LoadPhoto.GetPhoto{
         for(int i=0;i<statusList.size();i++){
             Status status=statusList.get(i);
             Bitmap bitmap=bitmaps.get(i);
-            LatLng loc=new LatLng(status.getGeoLocation().getLatitude(),status.getGeoLocation().getLongitude());
-            String title=status.getUser().getName();
-            markerOptionses.add(createMarker(loc,title,bitmap));
+            if(status.getGeoLocation()!=null){
+                LatLng loc=new LatLng(status.getGeoLocation().getLatitude(),status.getGeoLocation().getLongitude());
+                String title=status.getUser().getName();
+                markerOptionses.add(createMarker(loc,title,bitmap));
+            }
+
         }
 
         BusProvider.getInstance().post(new MarkerOptionsEvent(markerOptionses));

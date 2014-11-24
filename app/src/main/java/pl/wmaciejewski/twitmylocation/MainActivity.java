@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,12 +18,16 @@ import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
 import pl.wmaciejewski.twitmylocation.maps.MapPanel;
+import pl.wmaciejewski.twitmylocation.sendtwitpackage.SendTwitActivity;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterPanel;
+import pl.wmaciejewski.twitmylocation.twitter.TwitterUtils;
 import pl.wmaciejewski.twitmylocation.twitter.dialog.FindHashTagDialog;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -124,7 +130,26 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
 
     @Override
     public void onTwitLocation(Twitter twitter) {
+        if(mapPanel.getCurrentLocation()!=null){
+            Location loc=mapPanel.getCurrentLocation();
+            LatLng latLng=new LatLng(loc.getLatitude(),loc.getLongitude());
+            Bitmap bitmap=mapPanel.getProfileImage();
+            setBundle(latLng, bitmap);
+            Intent intent=new Intent(this,SendTwitActivity.class);
+        }
 
+    }
+
+    private Bundle setBundle(LatLng latLng, Bitmap bitmap) {
+        Bundle outState=new Bundle();
+        outState.putString(SendTwitActivity.NAME_PROPOERTY, TwitterUtils.getInstance().getUser().getName());
+        outState.putDouble(SendTwitActivity.LATITUDE_PROPERTY,latLng.latitude);
+        outState.putDouble(SendTwitActivity.LONGITUDE_PROPERTY,latLng.longitude);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        outState.putByteArray(SendTwitActivity.BITMAP_PROPOERTY, byteArray);
+        return outState;
     }
 
     private void clearCredentials() {

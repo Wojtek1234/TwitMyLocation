@@ -1,5 +1,6 @@
 package pl.wmaciejewski.twitmylocation.maps;
 
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.view.View;
@@ -26,6 +27,7 @@ public class MapPanel{
     private final View view;
     private MarkerBuilder markerBuilder;
     private Button finMeOnMap, placeMeOnMap;
+    private Bitmap profileImage;
     private MapsDrawer mapsDrawer;
     private List<Status> statusList;
 
@@ -53,6 +55,8 @@ public class MapPanel{
 
     @Subscribe
     public void answerStatusList(ListOfStatusEvent listOfStatusEvent){
+
+        //TODO Dialog with ListView to
         mapsDrawer.setStatusList(listOfStatusEvent.getStatusList());
         new MarkersCustomBuilder(view,statusList);
     }
@@ -62,8 +66,13 @@ public class MapPanel{
         mapsDrawer.drawMultipleMarkers(event.getMarkerOptionses());
     }
 
+    public Bitmap getProfileImage() {
+        return profileImage;
+    }
+
     @Subscribe
     public void answerBitmapGet(BitmapLoadedEvent event){
+        profileImage =event.getBitmap();
         getLocation.getSinglePosition();
     }
 
