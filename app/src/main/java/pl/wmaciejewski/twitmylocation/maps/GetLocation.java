@@ -23,8 +23,14 @@ public class GetLocation extends Observable {
         hereLocationListener=new HereLocationListener();
         updateLastKnowLocation(locationManager.getLastKnownLocation(provider));
         if(lastKnowLocation==null){
-             provider = locationManager.NETWORK_PROVIDER;
-             updateLastKnowLocation(locationManager.getLastKnownLocation(provider));
+
+
+             for(String provider1:locationManager.getAllProviders()){
+                 updateLastKnowLocation(locationManager.getLastKnownLocation(provider));
+                 if(lastKnowLocation!=null) break;
+             }
+
+
         }
         provider = locationManager.GPS_PROVIDER;
         this.locationManager.requestLocationUpdates(provider,5,10,new HereLocationListener() );

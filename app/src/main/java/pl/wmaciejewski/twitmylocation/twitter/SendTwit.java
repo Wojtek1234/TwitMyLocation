@@ -1,5 +1,7 @@
 package pl.wmaciejewski.twitmylocation.twitter;
 
+import android.os.AsyncTask;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
@@ -23,26 +25,43 @@ public class SendTwit {
 
 
     public void sendTwit(String msg) throws TwitterException {
-        twitter.updateStatus(msg);
+        StatusUpdate status = new StatusUpdate(msg);
+        new UpdateStatus().execute(status);
     }
+
     public void sendTwit(String msg,LatLng loc) throws TwitterException {
-        twitter.updateStatus(new StatusUpdate(msg).location(new GeoLocation(loc.latitude,loc.longitude)));
+        new UpdateStatus().execute(new StatusUpdate(msg).location(new GeoLocation(loc.latitude,loc.longitude)));
     }
     public void sendTwit(String msg,File file) throws TwitterException {
         StatusUpdate status = new StatusUpdate(msg);
         status.setMedia(file);
-        twitter.updateStatus(status);
+        new UpdateStatus().execute(status);
     }
     public void sendTwit(String msg,File file,LatLng loc) throws TwitterException {
 
         StatusUpdate status = new StatusUpdate(msg);
         status.setMedia(file);
         status.location(new GeoLocation(loc.latitude,loc.longitude));
-        twitter.updateStatus(status);
+        new UpdateStatus().execute(status);
+
     }
 
     public void retwit(long id) throws TwitterException {
         twitter.retweetStatus(id);
+    }
+
+    private class UpdateStatus extends AsyncTask<StatusUpdate,Void,Void>{
+
+
+        @Override
+        protected Void doInBackground(StatusUpdate... statusUpdates) {
+            try {
+                twitter.updateStatus(statusUpdates[0]);
+            } catch (TwitterException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 }

@@ -18,7 +18,8 @@
         android:layout_height="250dp"
         android:layout_below="@id/sendTwitProfileIcon"
         android:background="@android:color/white"
-        android:text="@string/programHashTag"
+        android:layout_margin="15dp"
+        android:typeface="sans"
         android:textSize="25sp"
         android:gravity="left"/>
 

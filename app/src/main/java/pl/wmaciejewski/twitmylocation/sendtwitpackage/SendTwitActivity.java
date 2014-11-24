@@ -15,9 +15,9 @@ import android.widget.ImageView;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import pl.wmaciejewski.twitmylocation.R;
@@ -50,8 +50,10 @@ public class SendTwitActivity extends FragmentActivity implements ImagePickerDia
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_twit);
-        sendTwitEdit.addTextChangedListener(new TextChangeListener(sendTwitEdit));
+        ButterKnife.inject(this);
 
+        sendTwitEdit.addTextChangedListener(new TextChangeListener(sendTwitEdit));
+        sendTwitEdit.setText(getResources().getString(R.string.programHashTag));
         if(savedInstanceState!=null)setUpFromBundle( savedInstanceState);
         else  setUpFromBundle(getIntent().getExtras());
         imageView.setImageBitmap(bitmap);
@@ -60,13 +62,7 @@ public class SendTwitActivity extends FragmentActivity implements ImagePickerDia
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(NAME_PROPOERTY,user_name);
-        outState.putDouble(LATITUDE_PROPERTY,latLng.latitude);
-        outState.putDouble(LONGITUDE_PROPERTY,latLng.latitude);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        outState.putByteArray(BITMAP_PROPOERTY, byteArray);
+        outState=SetUpBundle.setBundle(latLng,bitmap,user_name);
         super.onSaveInstanceState(outState);
     }
 
@@ -83,13 +79,13 @@ public class SendTwitActivity extends FragmentActivity implements ImagePickerDia
         SendTwit sendTwit=new SendTwit();
         if(file!=null){
             try {
-                sendTwit.sendTwit(sendTwitEdit.getText().toString(),latLng);
+                sendTwit.sendTwit(sendTwitEdit.getText().toString(),file,latLng);
             } catch (TwitterException e) {
                 e.printStackTrace();
             }
         }else{
             try {
-                sendTwit.sendTwit(sendTwitEdit.getText().toString(),file,latLng);
+                sendTwit.sendTwit(sendTwitEdit.getText().toString(),latLng);
             } catch (TwitterException e) {
                 e.printStackTrace();
             }
@@ -100,6 +96,7 @@ public class SendTwitActivity extends FragmentActivity implements ImagePickerDia
     @OnClick(R.id.pickPhotoToTwit)
     public void getImage() {
         ImagePickerDialog imagePickerDialog = new ImagePickerDialog();
+        imagePickerDialog.setmListener(this);
         imagePickerDialog.show(getSupportFragmentManager(), getResources().getString(R.string.pick_image_source));
     }
 

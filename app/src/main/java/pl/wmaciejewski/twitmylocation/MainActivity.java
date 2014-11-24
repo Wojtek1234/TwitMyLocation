@@ -20,12 +20,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
 import pl.wmaciejewski.twitmylocation.maps.MapPanel;
 import pl.wmaciejewski.twitmylocation.sendtwitpackage.SendTwitActivity;
+import pl.wmaciejewski.twitmylocation.sendtwitpackage.SetUpBundle;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterPanel;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterUtils;
 import pl.wmaciejewski.twitmylocation.twitter.dialog.FindHashTagDialog;
@@ -54,9 +54,11 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
         twitterPanel=new TwitterPanel((LinearLayout)findViewById(R.id.tweetingPanel),prefs);
         twitterPanel.setOnTwittListener(this);
+        mapPanel=new MapPanel(findViewById(R.id.mapPanel),mMap);
+
+
         BusProvider.getInstance().register(mapPanel);
         BusProvider.getInstance().register(twitterPanel);
-        mapPanel=new MapPanel(findViewById(R.id.mapPanel),mMap);
         twitterPanel.setForDialog(new FindHashTagDialog(),getSupportFragmentManager());
 
     }
@@ -73,6 +75,17 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         if(!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) showSettingsAlert();
     }
 
+    @Override
+    protected void onDestroy() {
+        try{
+            BusProvider.getInstance().unregister(mapPanel);
+            BusProvider.getInstance().unregister(twitterPanel);
+        }catch (Exception e){
+
+        }
+
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,23 +147,14 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
             Location loc=mapPanel.getCurrentLocation();
             LatLng latLng=new LatLng(loc.getLatitude(),loc.getLongitude());
             Bitmap bitmap=mapPanel.getProfileImage();
-            setBundle(latLng, bitmap);
             Intent intent=new Intent(this,SendTwitActivity.class);
+            intent.putExtras( SetUpBundle.setBundle(latLng, bitmap, TwitterUtils.getInstance().getUser().getName()));
+            startActivity(intent);
         }
 
     }
 
-    private Bundle setBundle(LatLng latLng, Bitmap bitmap) {
-        Bundle outState=new Bundle();
-        outState.putString(SendTwitActivity.NAME_PROPOERTY, TwitterUtils.getInstance().getUser().getName());
-        outState.putDouble(SendTwitActivity.LATITUDE_PROPERTY,latLng.latitude);
-        outState.putDouble(SendTwitActivity.LONGITUDE_PROPERTY,latLng.longitude);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        outState.putByteArray(SendTwitActivity.BITMAP_PROPOERTY, byteArray);
-        return outState;
-    }
+
 
     private void clearCredentials() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
