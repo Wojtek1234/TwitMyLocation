@@ -9,6 +9,7 @@ import android.widget.Button;
 import com.google.android.gms.maps.GoogleMap;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.wmaciejewski.twitmylocation.R;
@@ -29,7 +30,6 @@ public class MapPanel{
     private Button finMeOnMap, placeMeOnMap;
     private Bitmap profileImage;
     private MapsDrawer mapsDrawer;
-    private List<Status> statusList;
 
 
     public MapPanel(View view, GoogleMap map) {
@@ -53,12 +53,14 @@ public class MapPanel{
 
     }
 
-    @Subscribe
-    public void answerStatusList(ListOfStatusEvent listOfStatusEvent){
 
-        //TODO Dialog with ListView to
-        mapsDrawer.setStatusList(listOfStatusEvent.getStatusList());
-        new MarkersCustomBuilder(view,statusList);
+    public void doOnListOfStauses(List<Status> statuses){
+        List<Status> statusesWithGeoTag=new ArrayList<Status>();
+        for(Status status:statuses){
+            if(status.getGeoLocation()!=null) statusesWithGeoTag.add(status);
+        }
+        mapsDrawer.setStatusList(statusesWithGeoTag);
+        new MarkersCustomBuilder(view,statusesWithGeoTag);
     }
 
     @Subscribe

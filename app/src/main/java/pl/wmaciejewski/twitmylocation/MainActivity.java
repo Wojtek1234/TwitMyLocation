@@ -137,7 +137,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
 
     @Override
     public void onFindHashTag(List<Status> statusList) {
-
+        mapPanel.doOnListOfStauses(statusList);
     }
 
 
