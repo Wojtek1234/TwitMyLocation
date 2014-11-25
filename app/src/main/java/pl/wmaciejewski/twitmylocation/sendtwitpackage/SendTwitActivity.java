@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,11 +39,10 @@ public class SendTwitActivity extends FragmentActivity implements ImagePickerDia
     private String user_name;
     private Bitmap bitmap;
 
-    @InjectView(R.id.sendTwitButton)ImageButton sendTwitButton;
-    @InjectView(R.id.cancelSendingTwit)ImageButton cancelTwitingButton;
-    @InjectView(R.id.pickPhotoToTwit)ImageButton pickPhoto;
+
     @InjectView(R.id.sendTwitText)EditText sendTwitEdit;
     @InjectView(R.id.sendTwitProfileIcon)ImageView imageView;
+    @InjectView(R.id.imagePreview)ImageView imagePreview;
     private Uri selectedImageUri;
     private File file;
 
@@ -152,11 +152,15 @@ public class SendTwitActivity extends FragmentActivity implements ImagePickerDia
             case SELECT_PHOTO_GALLERY:
                 if (resultCode == RESULT_OK) {
                     file=new File(getRealPathFromUri(imageReturnedIntent.getData()));
+                    imagePreview.setVisibility(View.VISIBLE);
+                    imagePreview.setImageURI(imageReturnedIntent.getData());
                 }
                 break;
             case SELECT_PHOTO_CAPTURE:
                 if (resultCode == RESULT_OK) {
                     doOnUriRecived(selectedImageUri);
+                    imagePreview.setVisibility(View.VISIBLE);
+                    imagePreview.setImageURI(selectedImageUri);
                 }
                 break;
 
