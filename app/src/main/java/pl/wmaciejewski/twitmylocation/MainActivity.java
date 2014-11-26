@@ -56,9 +56,9 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         twitterPanel.setOnTwittListener(this);
         mapPanel=new MapPanel(findViewById(R.id.mapPanel),mMap);
 
-
         BusProvider.getInstance().register(mapPanel);
         BusProvider.getInstance().register(twitterPanel);
+
         twitterPanel.setForDialog(new FindHashTagDialog(),getSupportFragmentManager());
 
     }
@@ -151,7 +151,6 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
             intent.putExtras( SetUpBundle.setBundle(latLng, bitmap, TwitterUtils.getInstance().getUser().getName()));
             startActivity(intent);
         }
-
     }
 
 

@@ -14,7 +14,6 @@ import java.util.List;
 
 import pl.wmaciejewski.twitmylocation.R;
 import pl.wmaciejewski.twitmylocation.bus.BitmapLoadedEvent;
-import pl.wmaciejewski.twitmylocation.bus.ListOfStatusEvent;
 import pl.wmaciejewski.twitmylocation.bus.MarkerOptionsEvent;
 import pl.wmaciejewski.twitmylocation.bus.MessageLogin;
 import pl.wmaciejewski.twitmylocation.bus.StatusForDialogEvent;
@@ -55,12 +54,15 @@ public class MapPanel{
 
 
     public void doOnListOfStauses(List<Status> statuses){
-        List<Status> statusesWithGeoTag=new ArrayList<Status>();
-        for(Status status:statuses){
-            if(status.getGeoLocation()!=null) statusesWithGeoTag.add(status);
-        }
+        List<Status> statusesWithGeoTag = getStatusesWithGeoTag(statuses);
         mapsDrawer.setStatusList(statusesWithGeoTag);
         new MarkersCustomBuilder(view,statusesWithGeoTag);
+    }
+
+    private List<Status> getStatusesWithGeoTag(List<Status> statuses) {
+        List<Status> statusesWithGeoTag=new ArrayList<Status>();
+        for(Status status:statuses) if(status.getGeoLocation()!=null) statusesWithGeoTag.add(status);
+        return statusesWithGeoTag;
     }
 
     @Subscribe
