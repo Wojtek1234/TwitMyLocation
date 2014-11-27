@@ -23,5 +23,9 @@
     <string name="title_activity_send_twit">SendTwitActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="no_photo_warn">No photo</string>
+    <string name="showTwitListText">Show list Of Twits</string>
+    <string name="showMyTwitsText">Show My Twits</string>
+    <string name="showUserTwitsText">Show User Twits</string>
+    <string name="showInDistanceText">Show in neighborhood</string>
 
 </resources>

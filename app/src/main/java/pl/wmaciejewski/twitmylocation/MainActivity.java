@@ -19,16 +19,20 @@ import android.widget.LinearLayout;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
+import pl.wmaciejewski.twitmylocation.bus.ReplayTweetEvent;
+import pl.wmaciejewski.twitmylocation.bus.ShowStatusEvent;
 import pl.wmaciejewski.twitmylocation.maps.MapPanel;
 import pl.wmaciejewski.twitmylocation.sendtwitpackage.SendTwitActivity;
 import pl.wmaciejewski.twitmylocation.sendtwitpackage.SetUpBundle;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterPanel;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterUtils;
 import pl.wmaciejewski.twitmylocation.twitter.dialog.FindHashTagDialog;
+import pl.wmaciejewski.twitmylocation.twitter.dialog.TwitDialog;
 import twitter4j.Status;
 import twitter4j.Twitter;
 
@@ -55,12 +59,10 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         twitterPanel=new TwitterPanel((LinearLayout)findViewById(R.id.tweetingPanel),prefs);
         twitterPanel.setOnTwittListener(this);
         mapPanel=new MapPanel(findViewById(R.id.mapPanel),mMap);
-
         BusProvider.getInstance().register(mapPanel);
         BusProvider.getInstance().register(twitterPanel);
-
+        BusProvider.getInstance().register(this);
         twitterPanel.setForDialog(new FindHashTagDialog(),getSupportFragmentManager());
-
     }
 
     @Override
@@ -80,10 +82,10 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         try{
             BusProvider.getInstance().unregister(mapPanel);
             BusProvider.getInstance().unregister(twitterPanel);
+            BusProvider.getInstance().unregister(this);
         }catch (Exception e){
 
         }
-
         super.onDestroy();
     }
 
@@ -144,8 +146,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     @Override
     public void onTwitLocation(Twitter twitter) {
         if(mapPanel.getCurrentLocation()!=null){
-            Location loc=mapPanel.getCurrentLocation();
-            LatLng latLng=new LatLng(loc.getLatitude(),loc.getLongitude());
+            LatLng latLng = getLatLng();
             Bitmap bitmap=mapPanel.getProfileImage();
             Intent intent=new Intent(this,SendTwitActivity.class);
             intent.putExtras( SetUpBundle.setBundle(latLng, bitmap, TwitterUtils.getInstance().getUser().getName()));
@@ -153,6 +154,27 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         }
     }
 
+    @Subscribe
+    public void answerTosShowStatus(ShowStatusEvent event){
+        TwitDialog twitDialog=new TwitDialog();
+        twitDialog.setArguments(event.getBundle());
+        twitDialog.show(getSupportFragmentManager(),null);
+    }
+
+    @Subscribe
+    public void answerToReplay(ReplayTweetEvent event){
+        Intent intent=new Intent(this,SendTwitActivity.class);
+        LatLng latLng = getLatLng();
+        Bitmap bitmap=mapPanel.getProfileImage();
+
+        intent.putExtras( SetUpBundle.setBundle(latLng, bitmap, TwitterUtils.getInstance().getUser().getName(),"@"+event.getUsername()));
+        startActivity(intent);
+    }
+
+    private LatLng getLatLng() {
+        Location loc=mapPanel.getCurrentLocation();
+        return new LatLng(loc.getLatitude(),loc.getLongitude());
+    }
 
 
     private void clearCredentials() {
@@ -162,6 +184,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         edit.remove(PREF_KEY_OAUTH_SECRET);
         edit.commit();
     }
+
     private void saveTwitterInfo(Intent intent){
         SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(this).edit();
         e.putString(PREF_KEY_OAUTH_TOKEN, (String) intent.getExtras().get(PREF_KEY_OAUTH_TOKEN));

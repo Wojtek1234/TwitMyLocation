@@ -30,6 +30,12 @@
 
 
     </LinearLayout>
+
+    <include layout="@layout/list_buttons_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"/>
     </FrameLayout>
 
 

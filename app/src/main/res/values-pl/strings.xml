@@ -18,5 +18,13 @@
     <string name="gsr_not_enable">Usługi lokalizacyjne nie sa włączone \n Chcesz je uruchomić?</string>
     <string name="pick_image_source">Choose source of image</string>
     <string name="from_gallery">Take from gallery</string>
+    <string name="from_camera" translatable="false">Zrób zdjęcie</string>
+    <string name="no_photo_warn">brak zdjęcia</string>
+    <string name="programHashTag">#TwitMyLocation</string>
+    <string name="showTwitListText">Pokaz listę twitów</string>
+    <string name="title_activity_send_twit">Wyslij Twita</string>
+    <string name="showMyTwitsText">Show My Twits</string>
+    <string name="showUserTwitsText">Show Userr Twits</string>
+    <string name="showInDistanceText">Show in neighborhood</string>
 
 </resources>

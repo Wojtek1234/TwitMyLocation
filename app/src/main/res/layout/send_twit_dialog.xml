@@ -29,7 +29,7 @@
         android:src="@android:drawable/ic_menu_send"
         android:id="@+id/sendTwitButton"/>
 
-    
+
     <ImageButton
         android:layout_width="60dp"
         android:layout_height="60dp"

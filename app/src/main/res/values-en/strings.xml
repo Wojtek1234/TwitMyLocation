@@ -19,5 +19,12 @@
     <string name="programHashTag">#TwitMyLocation</string>
     <string name="pick_image_source">Choose source of image</string>
     <string name="from_gallery">Take from gallery</string>
+    <string name="from_camera" translatable="false">Catch from Camera</string>
+    <string name="no_photo_warn">No photo</string>
+    <string name="showTwitListText">Show list of Twits</string>
+    <string name="title_activity_send_twit">Send Twit</string>
+    <string name="showMyTwitsText">Show My Twits</string>
+    <string name="showUserTwitsText">Show User Twits</string>
+    <string name="showInDistanceText">Show in neighborhood</string>
 
 </resources>

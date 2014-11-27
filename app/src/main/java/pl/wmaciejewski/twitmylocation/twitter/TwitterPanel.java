@@ -79,10 +79,12 @@ public class TwitterPanel  {
         findHashTagButton.setEnabled(event.isLogginStatus());
     }
 
+
     @Subscribe
     public void answerListStatys(ListOfStatusEvent listOfStatusEvent){
         if(twitterListener!=null) twitterListener.onFindHashTag(listOfStatusEvent.getStatusList());
     }
+
 
     public void setForDialog(FindHashTagDialog findHashTagDialog, FragmentManager supportFragmentManager) {
         dialogFragment=findHashTagDialog;
@@ -96,9 +98,13 @@ public class TwitterPanel  {
         public void onFindHashTag(List<Status> statusList);
         public void onTwitLocation(Twitter twitter);
     }
+
+
     public boolean isLogged() {
         return twitterUtils.isLogged();
     }
+
+
 
     private Intent createLoginIntent(){
         return new Intent(this.view.getContext(),RequestTokenActivity.class);
@@ -116,6 +122,8 @@ public class TwitterPanel  {
             setLoginButtonText(view);
         }
     }
+
+
     private class TwitMyLocationListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
@@ -123,12 +131,16 @@ public class TwitterPanel  {
         }
     }
 
+
+
     private class FindHasTagListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             dialogFragment.show(fragmentManager,null);
         }
     }
+
+
 
     private class DialogListener implements FindHashTagDialog.OnSearchHashTagListener{
 
