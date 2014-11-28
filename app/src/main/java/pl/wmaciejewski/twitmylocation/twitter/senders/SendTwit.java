@@ -20,31 +20,9 @@ public class SendTwit extends AbstractSender{
 
     }
 
+
     @Override
-    public void sendTwit(String msg) throws TwitterException {
-        StatusUpdate status = new StatusUpdate(msg);
-        new UpdateStatus().execute(status);
+    protected StatusUpdate createStatusUpdate(String msg) {
+        return   new StatusUpdate(msg);
     }
-    @Override
-    public void sendTwit(String msg,LatLng loc) throws TwitterException {
-        new UpdateStatus().execute(new StatusUpdate(msg).location(new GeoLocation(loc.latitude,loc.longitude)));
-    }
-    @Override
-    public void sendTwit(String msg,File file) throws TwitterException {
-        StatusUpdate status = new StatusUpdate(msg);
-        status.setMedia(file);
-        new UpdateStatus().execute(status);
-    }
-    @Override
-    public void sendTwit(String msg,File file,LatLng loc) throws TwitterException {
-        StatusUpdate status = new StatusUpdate(msg);
-        status.setMedia(file);
-        status.location(new GeoLocation(loc.latitude,loc.longitude));
-        new UpdateStatus().execute(status);
-    }
-
-
-
-
-
 }

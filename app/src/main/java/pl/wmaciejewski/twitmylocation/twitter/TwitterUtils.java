@@ -54,6 +54,7 @@ public class TwitterUtils {
     }
 
     public void authenticat(SharedPreferences prefs) {
+        if(logged)return;
         token = prefs.getString(MainActivity.PREF_KEY_OAUTH_TOKEN, "");
         secret = prefs.getString(MainActivity.PREF_KEY_OAUTH_SECRET, "");
         accessToken = new AccessToken(token, secret);

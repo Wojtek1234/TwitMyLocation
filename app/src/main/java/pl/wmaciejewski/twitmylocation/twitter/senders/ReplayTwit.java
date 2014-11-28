@@ -19,35 +19,11 @@ public class ReplayTwit extends AbstractSender {
         this.replay_id = replay_id;
     }
 
+
     @Override
-    public void sendTwit(String msg) throws TwitterException {
+    protected StatusUpdate createStatusUpdate(String msg) {
         StatusUpdate status = new StatusUpdate(msg);
         status.setInReplyToStatusId(replay_id);
-        new UpdateStatus().execute(status);
-
-    }
-
-    @Override
-    public void sendTwit(String msg, LatLng loc) throws TwitterException {
-        StatusUpdate status =  new StatusUpdate(msg).location(new GeoLocation(loc.latitude,loc.longitude));
-        status.setInReplyToStatusId(replay_id);
-        new UpdateStatus().execute();
-    }
-
-    @Override
-    public void sendTwit(String msg, File file) throws TwitterException {
-        StatusUpdate status = new StatusUpdate(msg);
-        status.setMedia(file);
-        status.setInReplyToStatusId(replay_id);
-        new UpdateStatus().execute(status);
-    }
-
-    @Override
-    public void sendTwit(String msg, File file, LatLng loc) throws TwitterException {
-        StatusUpdate status = new StatusUpdate(msg);
-        status.setMedia(file);
-        status.location(new GeoLocation(loc.latitude,loc.longitude));
-        status.setInReplyToStatusId(replay_id);
-        new UpdateStatus().execute(status);
+        return status;
     }
 }

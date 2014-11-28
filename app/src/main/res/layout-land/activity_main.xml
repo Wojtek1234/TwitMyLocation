@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
+    android:id="@+id/mainPanel"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <include layout="@layout/map_fragment"
         android:layout_width="match_parent"
@@ -18,6 +19,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         />
+    <include layout="@layout/list_buttons_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"/>
     </FrameLayout>
 
 

@@ -50,8 +50,8 @@ public class MarkersCustomBuilder implements LoadPhoto.GetPhoto{
             }
 
         }
+        if(markerOptionses.size()!=0) BusProvider.getInstance().post(new MarkerOptionsEvent(markerOptionses));
 
-        BusProvider.getInstance().post(new MarkerOptionsEvent(markerOptionses));
 
     }
 

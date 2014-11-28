@@ -53,26 +53,19 @@ public class TwitDialog extends DialogFragment {
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        Dialog dialog = new Dialog(getActivity(),android.R.style.Theme_Translucent_NoTitleBar);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view =inflater.inflate(R.layout.single_twit_dialog, null);
         ButterKnife.inject(this,view);
         builder.setView(view);
-        fillFromBundle(savedInstanceState);
+        builder.setTitle(getResources().getString(R.string.twitDialogTitle));
+        fillFromBundle(getArguments());
 
-        Drawable d = new ColorDrawable(Color.GRAY);
-        d.setAlpha(130);
-        dialog.getWindow().setBackgroundDrawable(d);
-        dialog.getWindow().setContentView(view);
 
-        final WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.gravity = Gravity.CENTER;
-        dialog.setCanceledOnTouchOutside(true);
 
-        return dialog;
+
+        return builder.create();
 
     }
 
@@ -100,7 +93,10 @@ public class TwitDialog extends DialogFragment {
         userTextView.setText(bundle.getString(TWIT_USERNAME));
         dateTextView.setText(bundle.getString(TWIT_DATE));
         twitEditText.setText(bundle.getString(TWIT_TEXT));
-        if(bundle.getString(TWIT_IMAGE)!=null)   Picasso.with(getActivity()).load(bundle.getString(TWIT_IMAGE)).into(imageFromVTwit);
+        if(bundle.getString(TWIT_IMAGE)!=null) {
+            Picasso.with(getActivity()).load(bundle.getString(TWIT_IMAGE)).into(imageFromVTwit);
+            imageFromVTwit.setVisibility(View.VISIBLE);
+        }
         status_id=bundle.getLong(TWIT_ID);
     }
 

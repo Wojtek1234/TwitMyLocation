@@ -41,9 +41,18 @@ public class TwitterPanel  {
         findHashTagButton=(Button)view.findViewById(R.id.findByHash);
         findHashTagButton.setOnClickListener(new FindHasTagListener());
         this.view=view;
-
+        if(twitterUtils.isLogged()){
+            logged=true;
+            logginButton.setEnabled(twitterUtils.isLogged());
+            setLoginButtonText(view);
+            twitLocationButton.setEnabled(true);
+            findHashTagButton.setEnabled(true);
+        }
     }
 
+    public TwitterUser getTwiterUser(){
+        return twitterUtils.getUser();
+    }
 
     private void setLoginButtonText(View view) {
         if(logged) logginButton.setText(view.getResources().getString(R.string.logoutTwitText));

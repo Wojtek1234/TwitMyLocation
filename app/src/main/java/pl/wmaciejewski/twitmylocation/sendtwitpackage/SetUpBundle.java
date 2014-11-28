@@ -61,7 +61,7 @@ public class SetUpBundle {
         outState.putString(TwitDialog.TWIT_IMAGEURL,status.getUser().getBiggerProfileImageURL());
         outState.putLong(TwitDialog.TWIT_ID, status.getId());
         outState.putString(TwitDialog.TWIT_TEXT,status.getText());
-        if(status.getMediaEntities()[0].getMediaURL()!=null)  outState.putString(TwitDialog.TWIT_IMAGE,status.getMediaEntities()[0].getMediaURL());
+        if(status.getMediaEntities().length>0)  outState.putString(TwitDialog.TWIT_IMAGE,status.getMediaEntities()[0].getMediaURL());
         return outState;
     }
 }

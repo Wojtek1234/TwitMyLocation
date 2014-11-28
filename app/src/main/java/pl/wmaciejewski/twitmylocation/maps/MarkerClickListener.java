@@ -22,7 +22,11 @@ public class MarkerClickListener implements GoogleMap.OnMarkerClickListener {
     public boolean onMarkerClick(Marker marker) {
 
 
-        BusProvider.getInstance().post(new StatusForDialogEvent(marker,markerStatusHashMap.get(marker)));
+        try{
+            BusProvider.getInstance().post(new StatusForDialogEvent(marker,markerStatusHashMap.get(marker)));
+        }catch(NullPointerException ne){
+            ne.printStackTrace();
+        }
         return false;
     }
 }

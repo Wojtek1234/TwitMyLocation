@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import pl.wmaciejewski.twitmylocation.ListOfStatusHolder;
 import twitter4j.Status;
 
 /**
@@ -28,6 +29,7 @@ public class MapsDrawer implements Observer {
     private Location currentLocation;
     private List<MarkerOptions> markerOptionses;
     private List<Status> statuses;
+    private ArrayList<Marker> markers=new ArrayList<Marker>();
 
     public MapsDrawer(MarkerBuilder markerBuilder,GoogleMap map){
         this.markerBuilder =markerBuilder;
@@ -63,7 +65,7 @@ public class MapsDrawer implements Observer {
     public void drawMultipleMarkers(List<MarkerOptions> markerOptionses){
         HashMap<Marker, Status> markerStatusHashMap=new HashMap<Marker, Status>();
         this.markerOptionses=markerOptionses;
-        ArrayList<Marker> markers=new ArrayList<Marker>();
+        markers = new ArrayList<Marker>();
         addMarkersOnHashMap(markerOptionses, markerStatusHashMap, markers);
         mMap.setOnMarkerClickListener(new MarkerClickListener(markerStatusHashMap));
         showAllMarkers(markers);
@@ -83,6 +85,12 @@ public class MapsDrawer implements Observer {
         setUpMap(currentLocation);
     }
 
+    public void clearMarkers(){
+        for(Marker marker:markers){
+            marker.remove();
+        }
+    }
+
     public List<Status> getStatuses() {
         return statuses;
     }
@@ -97,5 +105,6 @@ public class MapsDrawer implements Observer {
 
     public void setStatusList(List<Status> statusList) {
         this.statuses = statusList;
+        ListOfStatusHolder.getInstance().setStatusList(statuses);
     }
 }

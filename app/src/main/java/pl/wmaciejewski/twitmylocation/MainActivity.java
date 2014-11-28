@@ -26,6 +26,7 @@ import java.util.List;
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
 import pl.wmaciejewski.twitmylocation.bus.ReplayTweetEvent;
 import pl.wmaciejewski.twitmylocation.bus.ShowStatusEvent;
+import pl.wmaciejewski.twitmylocation.listsupport.SupportFourButtons;
 import pl.wmaciejewski.twitmylocation.maps.MapPanel;
 import pl.wmaciejewski.twitmylocation.sendtwitpackage.SendTwitActivity;
 import pl.wmaciejewski.twitmylocation.sendtwitpackage.SetUpBundle;
@@ -46,8 +47,8 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     private GoogleMap mMap;
     private TwitterPanel twitterPanel;
     private MapPanel mapPanel;
-
-
+    private SupportFourButtons supportFourButtons;
+    private ListOfStatusHolder listOfStatusHolder=ListOfStatusHolder.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +59,17 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
         twitterPanel=new TwitterPanel((LinearLayout)findViewById(R.id.tweetingPanel),prefs);
         twitterPanel.setOnTwittListener(this);
-        mapPanel=new MapPanel(findViewById(R.id.mapPanel),mMap);
+        if(!twitterPanel.isLogged())mapPanel=new MapPanel(findViewById(R.id.mainPanel),mMap);
+        else mapPanel=new MapPanel(findViewById(R.id.mainPanel),mMap,twitterPanel.getTwiterUser());
+
         BusProvider.getInstance().register(mapPanel);
         BusProvider.getInstance().register(twitterPanel);
         BusProvider.getInstance().register(this);
         twitterPanel.setForDialog(new FindHashTagDialog(),getSupportFragmentManager());
+        if(listOfStatusHolder.getStatusList().size()>0){
+            onFindHashTag(listOfStatusHolder.getStatusList());
+        }
+
     }
 
     @Override
@@ -76,6 +83,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) showSettingsAlert();
         if(!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) showSettingsAlert();
     }
+
 
     @Override
     protected void onDestroy() {
@@ -126,6 +134,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
                 this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 saveTwitterInfo(data);
                 twitterPanel.login(this.prefs);
+
             }
         }
     }
@@ -139,7 +148,13 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
 
     @Override
     public void onFindHashTag(List<Status> statusList) {
-        mapPanel.doOnListOfStauses(statusList);
+        if(statusList.size()>0){
+            supportFourButtons = new SupportFourButtons(findViewById(R.id.listButtonsPanel),getSupportFragmentManager());
+            mapPanel.doOnListOfStauses(statusList);
+            supportFourButtons.showPanel();
+            supportFourButtons.setStatusList(statusList);
+        }
+
     }
 
 
@@ -158,7 +173,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     public void answerTosShowStatus(ShowStatusEvent event){
         TwitDialog twitDialog=new TwitDialog();
         twitDialog.setArguments(event.getBundle());
-        twitDialog.show(getSupportFragmentManager(),null);
+        twitDialog.show(getSupportFragmentManager(), null);
     }
 
     @Subscribe

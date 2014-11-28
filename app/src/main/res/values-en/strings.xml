@@ -26,5 +26,6 @@
     <string name="showMyTwitsText">Show My Twits</string>
     <string name="showUserTwitsText">Show User Twits</string>
     <string name="showInDistanceText">Show in neighborhood</string>
+    <string name="clearMarkers">Clear all markers</string>
 
 </resources>
