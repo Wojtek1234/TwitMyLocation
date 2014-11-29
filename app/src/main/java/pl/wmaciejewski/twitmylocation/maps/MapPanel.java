@@ -4,11 +4,14 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -22,8 +25,14 @@ import pl.wmaciejewski.twitmylocation.bus.MarkerOptionsEvent;
 import pl.wmaciejewski.twitmylocation.bus.MessageLogin;
 import pl.wmaciejewski.twitmylocation.bus.ShowStatusEvent;
 import pl.wmaciejewski.twitmylocation.bus.StatusForDialogEvent;
+import pl.wmaciejewski.twitmylocation.places.GoogleApiRequester;
+import pl.wmaciejewski.twitmylocation.places.GooglePlace;
+import pl.wmaciejewski.twitmylocation.places.PlacesList;
 import pl.wmaciejewski.twitmylocation.sendtwitpackage.SetUpBundle;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterUser;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import twitter4j.Status;
 
 /**
@@ -48,6 +57,7 @@ public class MapPanel{
 
         view.findViewById(R.id.findMeMap).setOnClickListener(new FinMeClick());
         view.findViewById(R.id.clearMarkers).setOnClickListener(new ClearClick());
+        view.findViewById(R.id.findNearByPlaces).setOnClickListener(new FindPlaces());
 
     }
 
@@ -62,6 +72,7 @@ public class MapPanel{
 
         view.findViewById(R.id.findMeMap).setOnClickListener(new FinMeClick());
         view.findViewById(R.id.clearMarkers).setOnClickListener(new ClearClick());
+        view.findViewById(R.id.findNearByPlaces).setOnClickListener(new FindPlaces());
         markerBuilder.updateUser(twitterUser);
     }
 
@@ -91,6 +102,7 @@ public class MapPanel{
 
     @Subscribe
     public void answerSetOfMarkers(MarkerOptionsEvent event){
+        mapsDrawer.clearMarkers();
         mapsDrawer.drawMultipleMarkers(event.getMarkerOptionses());
     }
 
@@ -124,6 +136,7 @@ public class MapPanel{
 
 
 
+
     private class FinMeClick implements View.OnClickListener{
 
         @Override
@@ -140,5 +153,38 @@ public class MapPanel{
             view.findViewById(R.id.listButtonsPanel).setVisibility(View.GONE);
             ListOfStatusHolder.getInstance().clearStatusList();
         }
+    }
+
+    private class FindPlaces implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            requestPlaces();
+        }
+
+        private void requestPlaces() {
+            mapsDrawer.clearMarkers();
+            GoogleApiRequester requester=new GoogleApiRequester();
+            requester.rquestPlacesInCity("restaurant","Warsaw",new Callback<PlacesList>() {
+                @Override
+                public void success(PlacesList placesList, Response response) {
+                    presentPlaces(placesList);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.d("tita","failer");
+                }
+            });
+        }
+    }
+
+    private void presentPlaces(PlacesList placesList) {
+        ArrayList<MarkerOptions> markerOptionses=new ArrayList<MarkerOptions>();
+        for(GooglePlace googlePlace:placesList.getPlaces()){
+            LatLng latLng=new LatLng (googlePlace.getLocationLat(),googlePlace.getLocationLong());
+            markerOptionses.add( new MarkerOptions().position(latLng).title(googlePlace.getAdress()));
+        }
+        mapsDrawer.drawMultipleMarkers2(markerOptionses);
+
     }
 }

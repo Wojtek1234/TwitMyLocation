@@ -69,7 +69,6 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         if(listOfStatusHolder.getStatusList().size()>0){
             onFindHashTag(listOfStatusHolder.getStatusList());
         }
-
     }
 
     @Override
@@ -84,7 +83,6 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         if(!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) showSettingsAlert();
     }
 
-
     @Override
     protected void onDestroy() {
         try{
@@ -92,7 +90,6 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
             BusProvider.getInstance().unregister(twitterPanel);
             BusProvider.getInstance().unregister(this);
         }catch (Exception e){
-
         }
         super.onDestroy();
     }
@@ -156,7 +153,6 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         }
 
     }
-
 
     @Override
     public void onTwitLocation(Twitter twitter) {

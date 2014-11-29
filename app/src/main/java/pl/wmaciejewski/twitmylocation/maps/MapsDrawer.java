@@ -43,6 +43,7 @@ public class MapsDrawer implements Observer {
     }
 
 
+
     private void centerMapOnMyLocation(Location loc) {
         if (loc != null) {
             LatLng myLocation = new LatLng(loc.getLatitude(),
@@ -71,6 +72,14 @@ public class MapsDrawer implements Observer {
         showAllMarkers(markers);
     }
 
+    public void drawMultipleMarkers2(List<MarkerOptions> markerOptionses){
+        for(MarkerOptions markerOptions:markerOptionses){
+            markers.add( mMap.addMarker(markerOptions)  );
+
+        }
+
+        showAllMarkers(markers);
+    }
     private void addMarkersOnHashMap(List<MarkerOptions> markerOptionses, HashMap<Marker, Status> markerStatusHashMap, ArrayList<Marker> markers) {
         for(int i=0;i<markerOptionses.size();i++){
             markers.add(i, mMap.addMarker(markerOptionses.get(i)));
