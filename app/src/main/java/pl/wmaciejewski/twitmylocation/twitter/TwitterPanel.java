@@ -76,6 +76,7 @@ public class TwitterPanel  {
 
 
     public void login(SharedPreferences prefs) {
+            twitterUtils.setLogged(false);
             twitterUtils.authenticat(prefs);
     }
 
