@@ -18,4 +18,9 @@ public interface GooglePlaceService {
     public void getPlacesForCity(@Query("query") String questionText,@Query("key") String key,
                                  Callback<PlacesList> callback);
 
+    @GET("/place/nearbysearch/json")
+    public void getPlacesForLocation(@Query("location") String locationLatLng,@Query("radius") int radius
+           , @Query("name") String name ,@Query("key") String key,
+                                 Callback<PlacesList> callback);
+
 }
