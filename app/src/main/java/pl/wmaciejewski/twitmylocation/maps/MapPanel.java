@@ -61,6 +61,7 @@ public class MapPanel{
         getLocation.setMapFirst();
 
         view.findViewById(R.id.findMeMap).setOnClickListener(new FinMeClick());
+        view.findViewById(R.id.clearMarkers).setOnClickListener(new ClearClick());
         markerBuilder.updateUser(twitterUser);
     }
 

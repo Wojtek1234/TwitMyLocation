@@ -14,44 +14,53 @@ public class GetLocation extends Observable {
     private HereLocationListener hereLocationListener;
 
 
-
     private Location lastKnowLocation;
 
-    public GetLocation(LocationManager locationManager){
-        this.locationManager= locationManager;
+    public GetLocation(LocationManager locationManager) {
+        this.locationManager = locationManager;
         String provider = locationManager.GPS_PROVIDER;
-        hereLocationListener=new HereLocationListener();
+        hereLocationListener = new HereLocationListener();
         updateLastKnowLocation(locationManager.getLastKnownLocation(provider));
-        if(lastKnowLocation==null){
 
 
-             for(String provider1:locationManager.getAllProviders()){
-                 updateLastKnowLocation(locationManager.getLastKnownLocation(provider));
-                 if(lastKnowLocation!=null) break;
-             }
+        for (String provider1 : locationManager.getAllProviders()) {
 
-
+            updateLastKnowLocation(locationManager.getLastKnownLocation(provider1));
         }
+
+
         provider = locationManager.GPS_PROVIDER;
-        this.locationManager.requestLocationUpdates(provider,5,10,new HereLocationListener() );
+        this.locationManager.requestLocationUpdates(provider, 5, 10, new HereLocationListener());
     }
 
-    public void setMapFirst(){
-        if(lastKnowLocation!=null) updateLastKnowLocation(lastKnowLocation);
+    public void setMapFirst() {
+        if (lastKnowLocation != null) updateLastKnowLocation(lastKnowLocation);
 
     }
 
-    public void getSinglePosition(){
+    public void getSinglePosition() {
         setMapFirst();
-        this.locationManager.requestSingleUpdate(locationManager.GPS_PROVIDER,hereLocationListener,null);
+        this.locationManager.requestSingleUpdate(locationManager.GPS_PROVIDER, hereLocationListener, null);
     }
-
 
 
     public void updateLastKnowLocation(Location location) {
-        lastKnowLocation=location;
-        setChanged();
-        notifyObservers(lastKnowLocation);
+        if (lastKnowLocation == null) {
+            lastKnowLocation = location;
+            setChanged();
+            notifyObservers(lastKnowLocation);
+            return;
+        }
+        if(location!=null){
+            if (location.getTime() - lastKnowLocation.getTime() > 0) {
+                lastKnowLocation = location;
+
+            }
+            setChanged();
+            notifyObservers(lastKnowLocation);
+        }
+
+
     }
 
     public Location getLastKnowLocation() {
@@ -59,7 +68,7 @@ public class GetLocation extends Observable {
     }
 
 
-    private class HereLocationListener implements android.location.LocationListener{
+    private class HereLocationListener implements android.location.LocationListener {
 
         @Override
         public void onLocationChanged(Location location) {

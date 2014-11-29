@@ -3,15 +3,10 @@ package pl.wmaciejewski.twitmylocation.twitter.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +18,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import pl.wmaciejewski.twitmylocation.R;
+import pl.wmaciejewski.twitmylocation.bus.BusProvider;
+import pl.wmaciejewski.twitmylocation.bus.ReplayTweetEvent;
 import pl.wmaciejewski.twitmylocation.twitter.senders.SendTwit;
 import twitter4j.TwitterException;
 
@@ -85,6 +82,9 @@ public class TwitDialog extends DialogFragment {
     @OnClick(R.id.replayButton)
     public void clickReplay(){
 
+        ReplayTweetEvent replayTweetEvent=new ReplayTweetEvent(userTextView.getText().toString(),status_id);
+        BusProvider.getInstance().post(replayTweetEvent);
+        dismiss();
 
     }
 
