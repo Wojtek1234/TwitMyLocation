@@ -1,21 +1,17 @@
 package pl.wmaciejewski.twitmylocation.twitter;
 
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.os.AsyncTask;
 
-import java.io.File;
 import java.util.List;
 
 import pl.wmaciejewski.twitmylocation.MainActivity;
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
 import pl.wmaciejewski.twitmylocation.bus.ListOfStatusEvent;
 import pl.wmaciejewski.twitmylocation.bus.MessageLogin;
-import twitter4j.GeoLocation;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
-import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -79,15 +75,7 @@ public class TwitterUtils {
     public void sendTweet(String msg) throws TwitterException {
         twitter.updateStatus(msg);
     }
-    public void sendTweetWithLocation(String msg,Location loc) throws TwitterException {
-        twitter.updateStatus(new StatusUpdate(msg).location(new GeoLocation(loc.getLatitude(),loc.getLongitude())));
-    }
-    public void sendTwitWithPhoto(String msg,File file) throws TwitterException {
-
-            StatusUpdate status = new StatusUpdate(msg);
-            status.setMedia(file);
-            twitter.updateStatus(status);
-    }
+   
 
     private List<Status> getTwitterStatusList(String searchHashTag) throws TwitterException {
         searchHashTag=searchHashTag.replace('#', ' ');
