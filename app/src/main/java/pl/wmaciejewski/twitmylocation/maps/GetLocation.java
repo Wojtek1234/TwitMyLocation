@@ -19,11 +19,11 @@ public class GetLocation extends Observable {
 
     public GetLocation(LocationManager locationManager) {
         Criteria criteria=new Criteria();
-        String bestProvider =locationManager.getBestProvider(criteria,false);
+        String bestProvider =locationManager.getBestProvider(criteria,true);
         this.locationManager = locationManager;
         String provider = locationManager.GPS_PROVIDER;
         hereLocationListener = new HereLocationListener();
-        updateLastKnowLocation(locationManager.getLastKnownLocation(provider));
+        updateLastKnowLocation(locationManager.getLastKnownLocation(bestProvider));
 
 
         for (String provider1 : locationManager.getAllProviders()) {

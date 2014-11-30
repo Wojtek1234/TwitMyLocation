@@ -27,5 +27,7 @@
     <string name="showUserTwitsText">Show Userr Twits</string>
     <string name="showInDistanceText">Show in neighborhood</string>
     <string name="clearMarkers">Wykasuj markery</string>
+    <string name="FindPlaces">Szukaj w pobliżu</string>
+    <string name="placeDialogTitle">Search for:</string>
 
 </resources>

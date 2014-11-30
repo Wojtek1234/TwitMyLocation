@@ -30,5 +30,6 @@
     <string name="twitDialogTitle" translatable="false">Tweet</string>
     <string name="clearMarkers">Clear all markers</string>
     <string name="FindPlaces">Find nearByPlaces</string>
+    <string name="placeDialogTitle">Search for:</string>
 
 </resources>

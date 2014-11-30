@@ -11,6 +11,13 @@ public class GooglePlace {
 
 
     private Geometry geometry;
+
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
     class Geometry{
         private GLocation location;
     }
@@ -33,13 +40,5 @@ public class GooglePlace {
     }
 
 
-    /* {
-         "formatted_address" : "44 Macleay St, Potts Point NSW 2010, Australia",
-         "geometry" : {
-            "location" : {
-               "lat" : -33.87087,
-               "lng" : 151.225459
-            }
-         },
-         "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",*/
+
 }

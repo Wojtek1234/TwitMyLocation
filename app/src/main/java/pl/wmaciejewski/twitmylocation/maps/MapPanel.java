@@ -1,5 +1,7 @@
 package pl.wmaciejewski.twitmylocation.maps;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -162,9 +165,16 @@ public class MapPanel{
         }
 
         private void requestPlaces() {
-            mapsDrawer.clearMarkers();
-            GoogleApiRequester requester=new GoogleApiRequester();
-            requester.rquestPlacesInCity("restaurant","Warsaw",new Callback<PlacesList>() {
+            createDialog();
+
+        }
+    }
+
+    private void generatePlacesRequest(String value) {
+        mapsDrawer.clearMarkers();
+        GoogleApiRequester requester=new GoogleApiRequester();
+        try {
+            requester.rquestNearBy(this.getCurrentLocation(), 1000, value, new Callback<PlacesList>() {
                 @Override
                 public void success(PlacesList placesList, Response response) {
                     presentPlaces(placesList);
@@ -172,19 +182,56 @@ public class MapPanel{
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.d("tita","failer");
+                    Log.d("tita", "failer");
                 }
             });
+        }catch (NullPointerException ne){
+            Toast.makeText(view.getContext(),"Can't get current location",Toast.LENGTH_SHORT);
         }
     }
 
     private void presentPlaces(PlacesList placesList) {
-        ArrayList<MarkerOptions> markerOptionses=new ArrayList<MarkerOptions>();
-        for(GooglePlace googlePlace:placesList.getPlaces()){
-            LatLng latLng=new LatLng (googlePlace.getLocationLat(),googlePlace.getLocationLong());
-            markerOptionses.add( new MarkerOptions().position(latLng).title(googlePlace.getAdress()));
+        if(placesList.getPlaces().size()>0) {
+            ArrayList<MarkerOptions> markerOptionses = new ArrayList<MarkerOptions>();
+            for (GooglePlace googlePlace : placesList.getPlaces()) {
+                createMarkerPlace(markerOptionses, googlePlace);
+            }
+            mapsDrawer.drawMultipleMarkers2(markerOptionses);
         }
-        mapsDrawer.drawMultipleMarkers2(markerOptionses);
-
     }
+
+    private void createMarkerPlace(ArrayList<MarkerOptions> markerOptionses, GooglePlace googlePlace) {
+        LatLng latLng = new LatLng(googlePlace.getLocationLat(), googlePlace.getLocationLong());
+        if(googlePlace.getAdress()!=null)markerOptionses.add(new MarkerOptions().position(latLng).title(googlePlace.getAdress()));
+        else markerOptionses.add(new MarkerOptions().position(latLng).title(googlePlace.getName()));
+    }
+
+
+    private void createDialog(){
+        final AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
+
+        alert.setTitle(view.getResources().getString(R.string.placeDialogTitle));
+
+
+
+        final EditText input = new EditText(view.getContext());
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                generatePlacesRequest(value);
+                dialog.dismiss();
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        });
+
+        alert.show();
+    }
+
 }
