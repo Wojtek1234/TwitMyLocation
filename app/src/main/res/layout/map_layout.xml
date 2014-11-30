@@ -15,15 +15,7 @@
         android:background="?android:selectableItemBackground"
         android:drawableLeft="@drawable/findme"
         android:text="@string/findMeOnMap"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/placeMeOnMap"
-        android:layout_margin="10dp"
-        android:layout_gravity="center"
-        android:background="?android:selectableItemBackground"
-        android:drawableLeft="@drawable/place_me"
-        android:text="@string/placeMeOnMap"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +33,7 @@
         android:layout_margin="10dp"
         android:layout_gravity="center"
         android:background="?android:selectableItemBackground"
-        android:drawableLeft="@drawable/ic_action_clear"
+        android:drawableLeft="@drawable/place_me"
         android:text="@string/FindPlaces"/>
 
 
