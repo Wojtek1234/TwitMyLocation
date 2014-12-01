@@ -63,5 +63,5 @@
         android:visibility="gone"
         android:id="@+id/imagePreview"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_below="@+id/pickPhotoToTwit"/>
 </RelativeLayout>

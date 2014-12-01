@@ -98,6 +98,8 @@ public class MapsDrawer implements Observer {
         for(Marker marker:markers){
             marker.remove();
         }
+        markers=new ArrayList<Marker>();
+        mMap.setOnMarkerClickListener(null);
     }
 
     public List<Status> getStatuses() {
