@@ -24,9 +24,11 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import dagger.ObjectGraph;
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
 import pl.wmaciejewski.twitmylocation.bus.ReplayTweetEvent;
 import pl.wmaciejewski.twitmylocation.bus.ShowStatusEvent;
+import pl.wmaciejewski.twitmylocation.injections.TwitMyLocationApplication;
 import pl.wmaciejewski.twitmylocation.listsupport.SupportFourButtons;
 import pl.wmaciejewski.twitmylocation.maps.MapPanel;
 import pl.wmaciejewski.twitmylocation.sendtwitpackage.SendTwitActivity;
@@ -50,15 +52,22 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     private MapPanel mapPanel;
     private SupportFourButtons supportFourButtons;
     private ListOfStatusHolder listOfStatusHolder=ListOfStatusHolder.getInstance();
+    private ObjectGraph activityGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        activityGraph = ((TwitMyLocationApplication) getApplication()).getApplicationGraph();
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpMapIfNeeded();
         checkLocationSettings();
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        twitterPanel=new TwitterPanel((LinearLayout)findViewById(R.id.tweetingPanel),prefs);
+
+        twitterPanel=new TwitterPanel((LinearLayout)findViewById(R.id.tweetingPanel));
+        activityGraph.inject(twitterPanel);
+        twitterPanel.setOnLogginEvent(prefs);
         twitterPanel.setOnTwittListener(this);
         if(!twitterPanel.isLogged())mapPanel=new MapPanel(findViewById(R.id.mainPanel),mMap);
         else mapPanel=new MapPanel(findViewById(R.id.mainPanel),mMap,twitterPanel.getTwiterUser());

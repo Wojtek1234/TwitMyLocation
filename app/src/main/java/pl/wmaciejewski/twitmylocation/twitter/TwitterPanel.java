@@ -11,6 +11,8 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import pl.wmaciejewski.twitmylocation.R;
 import pl.wmaciejewski.twitmylocation.bus.ListOfStatusEvent;
 import pl.wmaciejewski.twitmylocation.bus.MessageLogin;
@@ -22,8 +24,10 @@ import twitter4j.Twitter;
  * Created by w.maciejewski on 2014-11-13.
  */
 public class TwitterPanel  {
+
+    @Inject TwitterUtils twitterUtils;
+
     private Button logginButton,findHashTagButton,twitLocationButton;
-    private TwitterUtils twitterUtils=TwitterUtils.getInstance();
     private TwitterListener twitterListener;
     private LinearLayout view;
     private boolean logged=false;
@@ -31,8 +35,7 @@ public class TwitterPanel  {
     private FindHashTagDialog dialogFragment;
 
 
-    public TwitterPanel(LinearLayout view, SharedPreferences prefs){
-        login(prefs);
+    public TwitterPanel(LinearLayout view){
         logginButton=(Button)view.findViewById(R.id.loginTwitButton);
         logginButton.setEnabled(false);
         logginButton.setOnClickListener(new LoginButOnClick());
@@ -41,6 +44,11 @@ public class TwitterPanel  {
         findHashTagButton=(Button)view.findViewById(R.id.findByHash);
         findHashTagButton.setOnClickListener(new FindHasTagListener());
         this.view=view;
+
+    }
+
+    public void setOnLogginEvent( SharedPreferences prefs) {
+        login(prefs);
         if(twitterUtils.isLogged()){
             logged=true;
             logginButton.setEnabled(twitterUtils.isLogged());

@@ -46,7 +46,7 @@ public class TwitterUtils {
         return instance;
     }
 
-    private TwitterUtils() {
+    public TwitterUtils() {
     }
 
     public void authenticat(SharedPreferences prefs) {
