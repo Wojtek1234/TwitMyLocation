@@ -15,7 +15,7 @@ import twitter4j.TwitterException;
  */
 public class SendTwit extends AbstractSender{
 
-    private final Twitter twitter= TwitterUtils.getInstance().getTwitter();
+
     public SendTwit(){
 
     }

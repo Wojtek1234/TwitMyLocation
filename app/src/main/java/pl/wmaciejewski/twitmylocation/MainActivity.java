@@ -19,15 +19,19 @@ import android.widget.LinearLayout;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
 import pl.wmaciejewski.twitmylocation.bus.ReplayTweetEvent;
 import pl.wmaciejewski.twitmylocation.bus.ShowStatusEvent;
-import pl.wmaciejewski.twitmylocation.injections.TwitMyLocationApplication;
+import pl.wmaciejewski.twitmylocation.injections.ActivityModule;
+import pl.wmaciejewski.twitmylocation.injections.BaseActivity;
 import pl.wmaciejewski.twitmylocation.listsupport.SupportFourButtons;
 import pl.wmaciejewski.twitmylocation.maps.MapPanel;
 import pl.wmaciejewski.twitmylocation.sendtwitpackage.SendTwitActivity;
@@ -40,7 +44,7 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 
 
-public class MainActivity extends FragmentActivity implements TwitterPanel.TwitterListener{
+public class MainActivity extends BaseActivity implements TwitterPanel.TwitterListener{
     private static final int REQUEST_LOGIN =101 ;
     public static final int RESULT_CODE_LOGGED=102;
     public static String PREF_KEY_OAUTH_TOKEN="Key_token";
@@ -51,13 +55,11 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     private MapPanel mapPanel;
     private SupportFourButtons supportFourButtons;
     private ListOfStatusHolder listOfStatusHolder=ListOfStatusHolder.getInstance();
-    private ObjectGraph activityGraph;
+    @Inject
+    Bus bus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        activityGraph = ((TwitMyLocationApplication) getApplication()).getApplicationGraph();
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpMapIfNeeded();
@@ -65,7 +67,6 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         twitterPanel=new TwitterPanel((LinearLayout)findViewById(R.id.tweetingPanel));
-        activityGraph.inject(twitterPanel);
         twitterPanel.setOnLogginEvent(prefs);
         twitterPanel.setOnTwittListener(this);
         if(!twitterPanel.isLogged())mapPanel=new MapPanel(findViewById(R.id.mainPanel),mMap);
@@ -79,11 +80,18 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     }
 
     @Override
+    protected Object[] getModules() {
+         return new Object[] {
+                new ActivityModule(this),
+        };
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        BusProvider.getInstance().register(mapPanel);
-        BusProvider.getInstance().register(twitterPanel);
-        BusProvider.getInstance().register(this);
+        bus.register(mapPanel);
+        bus.register(twitterPanel);
+        bus.register(this);
     }
 
     private void checkLocationSettings() {
@@ -96,9 +104,9 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     @Override
     protected void onPause() {
         try{
-            BusProvider.getInstance().unregister(mapPanel);
-            BusProvider.getInstance().unregister(twitterPanel);
-            BusProvider.getInstance().unregister(this);
+            bus.unregister(mapPanel);
+            bus.unregister(twitterPanel);
+            bus.unregister(this);
         }catch (Exception e){
         }
         super.onDestroy();

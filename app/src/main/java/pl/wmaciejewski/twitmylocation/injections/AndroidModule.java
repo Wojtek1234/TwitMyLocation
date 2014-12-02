@@ -3,15 +3,17 @@ package pl.wmaciejewski.twitmylocation.injections;
 import android.content.Context;
 import android.location.LocationManager;
 
+import com.squareup.otto.Bus;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import pl.wmaciejewski.twitmylocation.TwitMyLocationApplication;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterPanel;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterUtils;
 import pl.wmaciejewski.twitmylocation.twitter.senders.AbstractSender;
 
-import static android.content.Context.LOCATION_SERVICE;
 /**
  * Created by w.maciejewski on 2014-12-02.
  */
@@ -20,28 +22,29 @@ import static android.content.Context.LOCATION_SERVICE;
         library = true, complete = false)
 
 public class AndroidModule {
-    private final TwitMyLocationApplication application;
 
-    public AndroidModule(TwitMyLocationApplication twitMyLocationApplication) {
-        this.application=twitMyLocationApplication;
-    }
+    static Context sApplicationContext=null;
+
+
 
     @Provides
     @Singleton
     @ForApplication
     Context provideApplicationContext() {
-        return application;
+        return sApplicationContext;
     }
 
     @Provides @Singleton
     LocationManager provideLocationManager() {
-        return (LocationManager) application.getSystemService(LOCATION_SERVICE);
+        return (LocationManager) sApplicationContext.getSystemService(Context.LOCATION_SERVICE);
     }
 
-    @Provides
-    @Singleton
-    @ForApplication
-    TwitterUtils proviedTwitterUtils(){
-        return new TwitterUtils();
+    @Provides @Singleton
+    Bus provideBus() {
+        return new Bus();
     }
+
+
 }
+
+

@@ -22,12 +22,14 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import pl.wmaciejewski.twitmylocation.R;
+import pl.wmaciejewski.twitmylocation.injections.ActivityModule;
+import pl.wmaciejewski.twitmylocation.injections.BaseActivity;
 import pl.wmaciejewski.twitmylocation.twitter.senders.AbstractSender;
 import pl.wmaciejewski.twitmylocation.twitter.senders.ReplayTwit;
 import pl.wmaciejewski.twitmylocation.twitter.senders.SendTwit;
 import twitter4j.TwitterException;
 
-public class SendTwitActivity extends FragmentActivity implements ImagePickerDialog.ImagePickerListener {
+public class SendTwitActivity extends BaseActivity implements ImagePickerDialog.ImagePickerListener {
     private static final int SELECT_PHOTO_GALLERY = 100;
     private static final int SELECT_PHOTO_CAPTURE = 101;
     public static final String BITMAP_PROPOERTY = "bitmap";
@@ -67,6 +69,14 @@ public class SendTwitActivity extends FragmentActivity implements ImagePickerDia
         else setUpFromBundle(getIntent().getExtras());
         imageView.setImageBitmap(bitmap);
 
+    }
+
+
+    @Override
+    protected Object[] getModules() {
+        return new Object[] {
+                new ActivityModule(this),
+        };
     }
 
     @Override

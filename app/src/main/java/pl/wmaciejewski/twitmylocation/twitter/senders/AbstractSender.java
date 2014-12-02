@@ -19,6 +19,7 @@ import twitter4j.TwitterException;
  */
 public abstract class AbstractSender implements TwitSender {
     @Inject TwitterUtils twitterUtils;
+
     protected Twitter twitter= twitterUtils.getTwitter();
     protected abstract StatusUpdate createStatusUpdate(String msg);
 

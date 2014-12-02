@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import pl.wmaciejewski.twitmylocation.TwitMyLocationApplication;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterPanel;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterUtils;
 
@@ -12,8 +13,12 @@ import pl.wmaciejewski.twitmylocation.twitter.TwitterUtils;
  */
 
 @Module(
-        injects = TwitterPanel.class,
-        complete = false
+        complete = true,    // Here it enables object graph validation
+        library = true,
+        addsTo = AndroidModule.class, // Important for object graph validation at compile time
+        injects = {
+                TwitMyLocationApplication.class,
+        }
 )
 public class TwitMyLocationModule {
    @Provides

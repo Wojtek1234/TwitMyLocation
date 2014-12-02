@@ -7,19 +7,20 @@ import java.util.Arrays;
 import java.util.List;
 
 import dagger.ObjectGraph;
+import pl.wmaciejewski.twitmylocation.TwitMyLocationApplication;
 
 /**
  * Created by w.maciejewski on 2014-12-02.
  */
-public class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends FragmentActivity {
     private ObjectGraph activityGraph;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Create the activity graph by .plus-ing our modules onto the application graph.
-        TwitMyLocationApplication application = (TwitMyLocationApplication) getApplication();
-        activityGraph = application.getApplicationGraph().plus(getModules().toArray());
+        AbstractApplication application = (AbstractApplication) getApplication();
+        activityGraph = application.getObjectGraph().plus(getModules());
 
         // Inject ourselves so subclasses will have dependencies fulfilled when this method returns.
         activityGraph.inject(this);
@@ -34,17 +35,15 @@ public class BaseActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-    /**
-     * A list of modules to use for the individual activity graph. Subclasses can override this
-     * method to provide additional modules provided they call and include the modules returned by
-     * calling {@code super.getModules()}.
-     */
-    protected List<Object> getModules() {
-        return Arrays.<Object>asList(new ActivityModule(this));
-    }
+
+    protected abstract Object[] getModules();
 
     /** Inject the supplied {@code object} using the activity-specific graph. */
     public void inject(Object object) {
         activityGraph.inject(object);
     }
+    public ObjectGraph getObjectGraph() {
+        return activityGraph;
+    }
+
 }
