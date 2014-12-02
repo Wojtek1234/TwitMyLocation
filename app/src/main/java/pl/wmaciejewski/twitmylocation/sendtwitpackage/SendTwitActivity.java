@@ -36,6 +36,8 @@ public class SendTwitActivity extends FragmentActivity implements ImagePickerDia
     public static final String LONGITUDE_PROPERTY = "longitude";
     public static final String EDIT_TEXT_TEXT = "editText";
     public static final String REPLAY_ID = "replay";
+    //TODO zrobic BaseFragment ktory zaciaga wszystko i injectowac poszczegolne wyniki :-)
+
 
 
     private LatLng latLng;

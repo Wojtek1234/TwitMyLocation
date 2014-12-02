@@ -9,13 +9,14 @@ import dagger.Module;
 import dagger.Provides;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterPanel;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterUtils;
+import pl.wmaciejewski.twitmylocation.twitter.senders.AbstractSender;
 
 import static android.content.Context.LOCATION_SERVICE;
 /**
  * Created by w.maciejewski on 2014-12-02.
  */
 
-@Module(injects = {TwitterPanel.class},
+@Module(injects = {TwitterPanel.class,AbstractSender.class},
         library = true, complete = false)
 
 public class AndroidModule {

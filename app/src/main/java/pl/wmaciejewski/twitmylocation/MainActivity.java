@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -71,10 +70,8 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         twitterPanel.setOnTwittListener(this);
         if(!twitterPanel.isLogged())mapPanel=new MapPanel(findViewById(R.id.mainPanel),mMap);
         else mapPanel=new MapPanel(findViewById(R.id.mainPanel),mMap,twitterPanel.getTwiterUser());
-        View view=findViewById(R.id.cancelSendingTwit);
-        BusProvider.getInstance().register(mapPanel);
-        BusProvider.getInstance().register(twitterPanel);
-        BusProvider.getInstance().register(this);
+
+
         twitterPanel.setForDialog(new FindHashTagDialog(),getSupportFragmentManager());
         if(listOfStatusHolder.getStatusList().size()>0){
             onFindHashTag(listOfStatusHolder.getStatusList());
@@ -82,8 +79,11 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(mapPanel);
+        BusProvider.getInstance().register(twitterPanel);
+        BusProvider.getInstance().register(this);
     }
 
     private void checkLocationSettings() {
@@ -94,7 +94,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onPause() {
         try{
             BusProvider.getInstance().unregister(mapPanel);
             BusProvider.getInstance().unregister(twitterPanel);
