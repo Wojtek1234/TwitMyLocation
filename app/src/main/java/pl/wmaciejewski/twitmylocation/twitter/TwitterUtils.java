@@ -9,6 +9,7 @@ import pl.wmaciejewski.twitmylocation.MainActivity;
 import pl.wmaciejewski.twitmylocation.bus.BusProvider;
 import pl.wmaciejewski.twitmylocation.bus.ListOfStatusEvent;
 import pl.wmaciejewski.twitmylocation.bus.MessageLogin;
+import roboguice.inject.ContextSingleton;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -19,6 +20,8 @@ import twitter4j.auth.AccessToken;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
+
+@ContextSingleton
 public class TwitterUtils {
 
 
@@ -38,16 +41,7 @@ public class TwitterUtils {
 
 
 
-    public static TwitterUtils getInstance() {
-        if (instance == null) {
-            instance = new TwitterUtils();
 
-        }
-        return instance;
-    }
-
-    private TwitterUtils() {
-    }
 
     public void authenticat(SharedPreferences prefs) {
         if(logged)return;

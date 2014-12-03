@@ -10,7 +10,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +19,8 @@ import android.widget.LinearLayout;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+
+import com.google.inject.Inject;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -35,11 +36,12 @@ import pl.wmaciejewski.twitmylocation.twitter.TwitterPanel;
 import pl.wmaciejewski.twitmylocation.twitter.TwitterUtils;
 import pl.wmaciejewski.twitmylocation.twitter.dialog.FindHashTagDialog;
 import pl.wmaciejewski.twitmylocation.twitter.dialog.TwitDialog;
+import roboguice.activity.RoboFragmentActivity;
 import twitter4j.Status;
 import twitter4j.Twitter;
 
 
-public class MainActivity extends FragmentActivity implements TwitterPanel.TwitterListener{
+public class MainActivity extends RoboFragmentActivity implements TwitterPanel.TwitterListener{
     private static final int REQUEST_LOGIN =101 ;
     public static final int RESULT_CODE_LOGGED=102;
     public static String PREF_KEY_OAUTH_TOKEN="Key_token";
@@ -50,6 +52,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
     private MapPanel mapPanel;
     private SupportFourButtons supportFourButtons;
     private ListOfStatusHolder listOfStatusHolder=ListOfStatusHolder.getInstance();
+    @Inject TwitterUtils twitterUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +164,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
             LatLng latLng = getLatLng();
             Bitmap bitmap=mapPanel.getProfileImage();
             Intent intent=new Intent(this,SendTwitActivity.class);
-            intent.putExtras( SetUpBundle.setBundle(latLng, bitmap, TwitterUtils.getInstance().getUser().getName()));
+            intent.putExtras( SetUpBundle.setBundle(latLng, bitmap, twitterUtils.getUser().getName()));
             startActivity(intent);
         }
     }
@@ -179,7 +182,7 @@ public class MainActivity extends FragmentActivity implements TwitterPanel.Twitt
         LatLng latLng = getLatLng();
         Bitmap bitmap=mapPanel.getProfileImage();
 
-        intent.putExtras( SetUpBundle.setBundle(latLng, bitmap, TwitterUtils.getInstance().getUser().getName(),"@"+event.getUsername()));
+        intent.putExtras( SetUpBundle.setBundle(latLng, bitmap, twitterUtils.getUser().getName(),"@"+event.getUsername()));
         startActivity(intent);
     }
 

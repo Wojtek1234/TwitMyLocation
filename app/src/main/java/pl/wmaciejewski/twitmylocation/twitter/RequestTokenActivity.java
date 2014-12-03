@@ -1,29 +1,31 @@
 package pl.wmaciejewski.twitmylocation.twitter;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.google.inject.Inject;
+
 import pl.wmaciejewski.twitmylocation.MainActivity;
+import roboguice.activity.RoboActivity;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
 
-public class RequestTokenActivity extends Activity {
+public class RequestTokenActivity extends RoboActivity {
     public static final int WEBVIEW_REQUEST_CODE = 254;
     public static final int WEBVIEW_REQUEST_LOGGED = 255;
     public static final int WEBVIEW_REQUEST_NOTLOGGED=256;
-
-
     private RequestToken requestToken;
+
+    @Inject TwitterUtils twitterUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Twitter twitter = TwitterUtils.getInstance().getTwitter();
+        Twitter twitter =twitterUtils.getTwitter();
         RetrieveResultTokenTask retrieveAccessTokenTask = new RetrieveResultTokenTask();
         retrieveAccessTokenTask.execute(twitter);
 
@@ -47,7 +49,7 @@ public class RequestTokenActivity extends Activity {
         if (requestCode == this.WEBVIEW_REQUEST_CODE) {
             if (resultCode == this.WEBVIEW_REQUEST_LOGGED) {
                 String verifier = data.getExtras().getString(Constants.VERIFIER);
-                Twitter twitter = TwitterUtils.getInstance().getTwitter();
+                Twitter twitter = twitterUtils.getTwitter();
                 RetrieveAccesTokenTask retrieveAccesTokenTask = new RetrieveAccesTokenTask(verifier);
                 retrieveAccesTokenTask.execute(twitter);
             }else if(resultCode==WEBVIEW_REQUEST_NOTLOGGED){
@@ -86,7 +88,7 @@ public class RequestTokenActivity extends Activity {
             } catch (TwitterException e) {
                 e.printStackTrace();
                 Twitter twitter;
-                twitter = TwitterUtils.getInstance().getBrandNewTwitter();
+                twitter = twitterUtils.getBrandNewTwitter();
                 try {
                     return twitter.getOAuthRequestToken(Constants.OAUTH_CALLBACK_URL);
                 } catch (TwitterException e1) {

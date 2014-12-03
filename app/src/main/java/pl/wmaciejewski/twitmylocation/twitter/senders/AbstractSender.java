@@ -3,6 +3,7 @@ package pl.wmaciejewski.twitmylocation.twitter.senders;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.inject.Inject;
 
 import java.io.File;
 
@@ -16,7 +17,8 @@ import twitter4j.TwitterException;
  * Created by w.maciejewski on 2014-11-27.
  */
 public abstract class AbstractSender implements TwitSender {
-    protected Twitter twitter= TwitterUtils.getInstance().getTwitter();
+    @Inject TwitterUtils twitterUtils;
+    protected Twitter twitter= twitterUtils.getTwitter();
     protected abstract StatusUpdate createStatusUpdate(String msg);
 
     @Override

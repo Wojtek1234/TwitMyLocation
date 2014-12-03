@@ -11,6 +11,8 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import pl.wmaciejewski.twitmylocation.R;
 import pl.wmaciejewski.twitmylocation.bus.ListOfStatusEvent;
 import pl.wmaciejewski.twitmylocation.bus.MessageLogin;
@@ -23,12 +25,13 @@ import twitter4j.Twitter;
  */
 public class TwitterPanel  {
     private Button logginButton,findHashTagButton,twitLocationButton;
-    private TwitterUtils twitterUtils=TwitterUtils.getInstance();
     private TwitterListener twitterListener;
     private LinearLayout view;
     private boolean logged=false;
     private FragmentManager fragmentManager;
     private FindHashTagDialog dialogFragment;
+
+    @Inject TwitterUtils twitterUtils;
 
 
     public TwitterPanel(LinearLayout view, SharedPreferences prefs){
